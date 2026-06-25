@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<meta content="Codescandy" name="author">
+  <title>Dasher Free - Responsive Bootstrap 5 Admin Dashboard</title>
+  <link rel="stylesheet" href="./assets/libs/swiper/swiper-bundle.min.css" />
+  <!-- Favicon icon-->
+<link rel="apple-touch-icon" sizes="57x57" href="./assets/images/favicon/apple-icon-57x57.png" />
+<link rel="apple-touch-icon" sizes="60x60" href="./assets/images/favicon/apple-icon-60x60.png" />
+<link rel="apple-touch-icon" sizes="72x72" href="./assets/images/favicon/apple-icon-72x72.png" />
+<link rel="apple-touch-icon" sizes="76x76" href="./assets/images/favicon/apple-icon-76x76.png" />
+<link rel="apple-touch-icon" sizes="114x114" href="./assets/images/favicon/apple-icon-114x114.png" />
+<link rel="apple-touch-icon" sizes="120x120" href="./assets/images/favicon/apple-icon-120x120.png" />
+<link rel="apple-touch-icon" sizes="144x144" href="./assets/images/favicon/apple-icon-144x144.png" />
+<link rel="apple-touch-icon" sizes="152x152" href="./assets/images/favicon/apple-icon-152x152.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="./assets/images/favicon/apple-icon-180x180.png" />
+<link rel="icon" type="image/png" sizes="192x192" href="./assets/images/favicon/android-icon-192x192.png" />
+<link rel="icon" type="image/png" sizes="32x32" href="./assets/images/favicon/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="96x96" href="./assets/images/favicon/favicon-96x96.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="./assets/images/favicon/favicon-16x16.png" />
+
+<meta name="msapplication-TileColor" content="#ffffff" />
+<meta name="msapplication-TileImage" content="./assets/images/favicon/ms-icon-144x144.png" />
+<meta name="theme-color" content="#ffffff" />
+<!-- Color modes -->
+<script src="./assets/js/vendors/color-modes.js"></script>
+<script>
+  if (localStorage.getItem('sidebarExpanded') === 'false') {
+    document.documentElement.classList.add('collapsed');
+    document.documentElement.classList.remove('expanded');
+  } else {
+    document.documentElement.classList.remove('collapsed');
+    document.documentElement.classList.add('expanded');
+  }
+</script>
+<!-- Libs CSS -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700;800&display=swap" />
+<link rel="stylesheet" href="./assets/libs/simplebar/dist/simplebar.min.css" />
+<link rel="stylesheet" href="./assets/libs/@tabler/icons-webfont/tabler-icons.min.css" />
+
+<!-- Theme CSS -->
+<link rel="stylesheet" href="./assets/css/theme.min.css">
+
+</head>
+
+<body>
+  <!-- Vertical Sidebar -->
+  <div>
+    <div id="miniSidebar">
+  <div class="brand-logo">
+    <a class="d-none d-md-flex align-items-center gap-2" href="./index.html">
+      <img src="./assets/images/brand/logo/logo-icon.svg" alt="" />
+      <span class="fw-bold fs-4 site-logo-text">FinStudent</span>
+    </a>
+  </div>
+  <ul class="navbar-nav flex-column">
+
+    <li class="nav-item">
+      <div class="nav-heading">Menu Utama</div>
+      <hr class="mx-5 nav-line mb-1" />
+    </li>
+    <!-- Nav item Dashboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="./index.html">
+        <span class="nav-icon">
+          <i class="ti ti-home fs-4"></i>
+        </span> 
+        <span class="text">Dashboard</span>
+      </a>
+    </li>
+
+    <!-- Nav item Transaksi -->
+    <li class="nav-item">
+      <a class="nav-link" href="./transactions.html">
+        <span class="nav-icon">
+          <i class="ti ti-receipt-2 fs-4"></i>
+        </span> 
+        <span class="text">Catat Transaksi</span>
+      </a>
+    </li>
+
+    <!-- Nav item Savings -->
+    <li class="nav-item">
+      <a class="nav-link" href="./savings.html">
+        <span class="nav-icon">
+          <i class="ti ti-pig-money fs-4"></i>
+        </span> 
+        <span class="text">Target Menabung</span>
+      </a>
+    </li>
+
+    <!-- Nav item Setup -->
+    <li class="nav-item">
+      <a class="nav-link" href="./setup.html">
+        <span class="nav-icon">
+          <i class="ti ti-settings fs-4"></i>
+        </span> 
+        <span class="text">Pengaturan</span>
+      </a>
+    </li>
+
+  </ul>
+</div>
+
+<!-- Mobile Offcanvas Sidebar -->
+<div class="offcanvasNav offcanvas offcanvas-start" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">
+  <div class="offcanvas-header">
+    <a class="d-flex align-items-center gap-2" href="./index.html">
+      <img src="./assets/images/brand/logo/logo-icon.svg" alt="" />
+      <span class="fw-bold fs-4 site-logo-text">FinStudent</span>
+    </a>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+  </div>
+  <div class="offcanvas-body p-0">
+    <ul class="navbar-nav flex-column">
+      
+      <li class="nav-item">
+        <div class="nav-heading">Menu Utama</div>
+        <hr class="mx-5 nav-line mb-1" />
+      </li>
+      <!-- Nav item Dashboard -->
+      <li class="nav-item">
+        <a class="nav-link" href="./index.html">
+          <span class="nav-icon">
+            <i class="ti ti-home fs-4"></i>
+          </span> 
+          <span class="text">Dashboard</span>
+        </a>
+      </li>
+  
+      <!-- Nav item Transaksi -->
+      <li class="nav-item">
+        <a class="nav-link" href="./transactions.html">
+          <span class="nav-icon">
+            <i class="ti ti-receipt-2 fs-4"></i>
+          </span> 
+          <span class="text">Catat Transaksi</span>
+        </a>
+      </li>
+  
+      <!-- Nav item Savings -->
+      <li class="nav-item">
+        <a class="nav-link" href="./savings.html">
+          <span class="nav-icon">
+            <i class="ti ti-pig-money fs-4"></i>
+          </span> 
+          <span class="text">Target Menabung</span>
+        </a>
+      </li>
+  
+      <!-- Nav item Setup -->
+      <li class="nav-item">
+        <a class="nav-link" href="./setup.html">
+          <span class="nav-icon">
+            <i class="ti ti-settings fs-4"></i>
+          </span> 
+          <span class="text">Pengaturan</span>
+        </a>
+      </li>
+
+    </ul>
+  </div>
+</div>
+
+    <!-- Main Content -->
+    <div id="content" class="position-relative h-100">
+      <!-- navbar -->
+<div class="navbar-glass navbar navbar-expand-lg px-0 px-lg-4">
+  <div class="container-fluid px-lg-0">
+    <div class="d-flex align-items-center gap-4">
+      <!-- Collapse -->
+      <div class="d-block d-lg-none">
+        <a class="text-inherit" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button"
+          aria-controls="offcanvasExample">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-menu-2">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M4 6l16 0" />
+            <path d="M4 12l16 0" />
+            <path d="M4 18l16 0" />
+          </svg>
+        </a>
+      </div>
+      <div class="d-none d-lg-block">
+        <a class="sidebar-toggle d-flex texttooltip p-3" href="javascript:void(0)" data-template="collapseMessage">
+          <span class="collapse-mini">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-bar-left text-secondary">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M4 12l10 0" />
+              <path d="M4 12l4 4" />
+              <path d="M4 12l4 -4" />
+              <path d="M20 4l0 16" />
+            </svg>
+          </span>
+          <span class="collapse-expanded">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-arrow-bar-right text-secondary">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M20 12l-10 0" />
+              <path d="M20 12l-4 4" />
+              <path d="M20 12l-4 -4" />
+              <path d="M4 4l0 16" />
+            </svg>
+            <div id="collapseMessage" class="d-none">
+              <span class="small">Collapse</span>
+            </div>
+          </span>
+        </a>
+      </div>
+      <!-- Logo -->
+      <!-- <div class="d-block d-md-none">
+        <a href="./index.html">
+          <img src="./assets/images/brand/logo/logo-icon.svg" alt="" />
+        </a>
+      </div> -->
+    </div>
+
+    <!-- Navbar nav -->
+    <ul class="list-unstyled d-flex align-items-center mb-0 gap-2">
+      <!-- Pages link -->
+      <li>
+        <button type="button" class="btn btn-white" data-bs-toggle="modal" data-bs-target="#searchModal">
+          <span><svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-search">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <circle cx="10" cy="10" r="7" />
+              <line x1="21" y1="21" x2="15" y2="15" />
+            </svg>
+          </span>
+          <small class="ms-1">⌘K</small>
+        </button>
+        <!-- Modal -->
+      </li>
+      <!-- Light dark mode-->
+      <li>
+        <div class="dropdown">
+          <button class="btn btn-ghost btn-icon rounded-circle d-flex align-items-center" type="button"
+            aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (auto)">
+            <i class="ti theme-icon-active lh-1 fs-5"><i class="ti theme-icon ti-sun"></i></i>
+            <span class="visually-hidden bs-theme-text">Toggle theme</span>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-end shadow">
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center active" data-bs-theme-value="light"
+                aria-pressed="true">
+                <i class="ti theme-icon ti ti-sun"></i>
+                <span class="ms-2">Light</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="dark"
+                aria-pressed="false">
+                <i class="ti theme-icon ti-moon-stars"></i>
+                <span class="ms-2">Dark</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" class="dropdown-item d-flex align-items-center" data-bs-theme-value="auto"
+                aria-pressed="false">
+                <i class="ti theme-icon ti-circle-half-2"></i>
+                <span class="ms-2">Auto</span>
+              </button>
+            </li>
+          </ul>
+        </div>
+      </li>
+      <!-- Bell icon -->
+      <li>
+        <a class="position-relative btn-icon btn-ghost btn rounded-circle" data-bs-toggle="offcanvas"
+          href="#offcanvasNotification" role="button" aria-controls="offcanvasNotification">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+            class="icon icon-tabler icons-tabler-outline icon-tabler-bell">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+            <path d="M10 5a2 2 0 1 1 4 0a7 7 0 0 1 4 6v3a4 4 0 0 0 2 3h-16a4 4 0 0 0 2 -3v-3a7 7 0 0 1 4 -6" />
+            <path d="M9 17v1a3 3 0 0 0 6 0v-1" />
+          </svg>
+          <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mt-2 ms-n2">
+            2
+            <span class="visually-hidden">unread messages</span>
+          </span>
+        </a>
+      </li>
+      <!-- Local Storage Mode Badge -->
+      <li class="ms-3 d-flex align-items-center">
+        <span class="badge bg-primary-subtle text-primary border border-primary-subtle d-flex align-items-center gap-1 py-2 px-3 rounded-pill shadow-sm">
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"/>
+            <path d="M3 4m0 2a2 2 0 0 1 2 -2h14a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-14a2 2 0 0 1 -2 -2z" />
+            <path d="M7 8h10" />
+            <path d="M7 12h10" />
+            <path d="M7 16h10" />
+          </svg>
+          <span class="fw-semibold" style="font-size: 0.85rem;">Device Local</span>
+        </span>
+      </li>
+    </ul>
+  </div>
+</div>
+<!--Offcanvas notification-->
+<div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNotification"
+  aria-labelledby="offcanvasNotificationLabel">
+  <div class="sticky-top bg-white">
+    <div class="offcanvas-header gap-4">
+      <div class="d-flex justify-content-between w-100">
+        <h5 class="mb-0" id="offcanvasNotificationLabel">Notifications</h5>
+        <div class="d-flex gap-3 align-items-center">
+          <a href="#" class="link-primary" data-bs-toggle="tooltip" data-bs-placement="bottom"
+            data-bs-title="Mark all as read">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-checks">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path d="M7 12l5 5l10 -10" />
+              <path d="M2 12l5 5m5 -5l5 -5" />
+            </svg>
+          </a>
+          <a href="#" class="text-inherit">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+              class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+              <path
+                d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+              <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+            </svg>
+          </a>
+        </div>
+      </div>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="mt-2">
+      <ul class="nav nav-line-bottom" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button class="nav-link active px-4 py-2" id="pills-all-tab" data-bs-toggle="pill" data-bs-target="#pills-all"
+            type="button" role="tab" aria-controls="pills-all" aria-selected="true">
+            All
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link px-4 py-2" id="pills-following-tab" data-bs-toggle="pill"
+            data-bs-target="#pills-following" type="button" role="tab" aria-controls="pills-following"
+            aria-selected="false">
+            Following
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button class="nav-link px-4 py-2" id="pills-archive-tab" data-bs-toggle="pill"
+            data-bs-target="#pills-archive" type="button" role="tab" aria-controls="pills-archive"
+            aria-selected="false">
+            Archive
+          </button>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="tab-content" id="pills-tabContent">
+    <div class="tab-pane fade show active" id="pills-all" role="tabpanel" aria-labelledby="pills-all-tab" tabindex="0">
+      <div data-simplebar="" style="height: 800px">
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column gap-1">
+                <div>New message from John Doe</div>
+                <small class="text-secondary"> 2 minutes ago</small>
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column gap-1">
+                <div>Your password will expire soon.</div>
+                <small class="text-secondary"> 2 minutes ago</small>
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-1.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Alice uploaded a new profile picture.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-2.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Mike sent you a friend request.</div>
+                  <small class="text-secondary"> 5 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+            <div class="d-flex gap-2 align-items-center mt-4">
+              <button type="button" class="btn btn-primary btn-sm">Accept</button>
+              <button type="button" class="btn btn-white btn-sm">Decline</button>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-3.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Sophia commented on your post.</div>
+                  <small class="text-secondary"> 20 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-primary-subtle text-primary-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>A system update has been installed.</div>
+                  <small class="text-secondary"> 30 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-info-subtle text-info-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-week">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                    <path d="M16 3v4" />
+                    <path d="M8 3v4" />
+                    <path d="M4 11h16" />
+                    <path d="M7 14h.013" />
+                    <path d="M10.01 14h.005" />
+                    <path d="M13.01 14h.005" />
+                    <path d="M16.015 14h.005" />
+                    <path d="M13.015 17h.005" />
+                    <path d="M7.01 17h.005" />
+                    <path d="M10.01 17h.005" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Reminder: Team meeting at 3:00 PM.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-danger-subtle text-danger-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l14 1l-1 7h-13" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Your order has been shipped!</div>
+                  <small class="text-secondary"> 2 hours ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-3.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Sophia commented on your post.</div>
+                  <small class="text-secondary"> 20 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-primary-subtle text-primary-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>A system update has been installed.</div>
+                  <small class="text-secondary"> 30 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-info-subtle text-info-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-week">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                    <path d="M16 3v4" />
+                    <path d="M8 3v4" />
+                    <path d="M4 11h16" />
+                    <path d="M7 14h.013" />
+                    <path d="M10.01 14h.005" />
+                    <path d="M13.01 14h.005" />
+                    <path d="M16.015 14h.005" />
+                    <path d="M13.015 17h.005" />
+                    <path d="M7.01 17h.005" />
+                    <path d="M10.01 17h.005" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Reminder: Team meeting at 3:00 PM.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-danger-subtle text-danger-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l14 1l-1 7h-13" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Your order has been shipped!</div>
+                  <small class="text-secondary"> 2 hours ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="pills-following" role="tabpanel" aria-labelledby="pills-following-tab" tabindex="0">
+      <div data-simplebar="" style="height: 800px">
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-info-subtle text-info-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-week">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                    <path d="M16 3v4" />
+                    <path d="M8 3v4" />
+                    <path d="M4 11h16" />
+                    <path d="M7 14h.013" />
+                    <path d="M10.01 14h.005" />
+                    <path d="M13.01 14h.005" />
+                    <path d="M16.015 14h.005" />
+                    <path d="M13.015 17h.005" />
+                    <path d="M7.01 17h.005" />
+                    <path d="M10.01 17h.005" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Reminder: Team meeting at 3:00 PM.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-danger-subtle text-danger-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l14 1l-1 7h-13" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Your order has been shipped!</div>
+                  <small class="text-secondary"> 2 hours ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-3.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Sophia commented on your post.</div>
+                  <small class="text-secondary"> 20 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-primary-subtle text-primary-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-settings">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path
+                      d="M10.325 4.317c.426 -1.756 2.924 -1.756 3.35 0a1.724 1.724 0 0 0 2.573 1.066c1.543 -.94 3.31 .826 2.37 2.37a1.724 1.724 0 0 0 1.065 2.572c1.756 .426 1.756 2.924 0 3.35a1.724 1.724 0 0 0 -1.066 2.573c.94 1.543 -.826 3.31 -2.37 2.37a1.724 1.724 0 0 0 -2.572 1.065c-.426 1.756 -2.924 1.756 -3.35 0a1.724 1.724 0 0 0 -2.573 -1.066c-1.543 .94 -3.31 -.826 -2.37 -2.37a1.724 1.724 0 0 0 -1.065 -2.572c-1.756 -.426 -1.756 -2.924 0 -3.35a1.724 1.724 0 0 0 1.066 -2.573c-.94 -1.543 .826 -3.31 2.37 -2.37c1 .608 2.296 .07 2.572 -1.065z" />
+                    <path d="M9 12a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>A system update has been installed.</div>
+                  <small class="text-secondary"> 30 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-info-subtle text-info-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-calendar-week">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M4 7a2 2 0 0 1 2 -2h12a2 2 0 0 1 2 2v12a2 2 0 0 1 -2 2h-12a2 2 0 0 1 -2 -2v-12z" />
+                    <path d="M16 3v4" />
+                    <path d="M8 3v4" />
+                    <path d="M4 11h16" />
+                    <path d="M7 14h.013" />
+                    <path d="M10.01 14h.005" />
+                    <path d="M13.01 14h.005" />
+                    <path d="M16.015 14h.005" />
+                    <path d="M13.015 17h.005" />
+                    <path d="M7.01 17h.005" />
+                    <path d="M10.01 17h.005" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Reminder: Team meeting at 3:00 PM.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <div class="icon-shape icon-md bg-danger-subtle text-danger-emphasis rounded-circle">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
+                    class="icon icon-tabler icons-tabler-outline icon-tabler-shopping-cart">
+                    <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                    <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" />
+                    <path d="M17 17h-11v-14h-2" />
+                    <path d="M6 5l14 1l-1 7h-13" />
+                  </svg>
+                </div>
+                <div class="d-flex flex-column gap-1">
+                  <div>Your order has been shipped!</div>
+                  <small class="text-secondary"> 2 hours ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+    <div class="tab-pane fade" id="pills-archive" role="tabpanel" aria-labelledby="pills-archive-tab" tabindex="0">
+      <div data-simplebar="" style="height: 800px">
+        <div class="list-group list-group-flush">
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column gap-1">
+                <div>New message from John Doe</div>
+                <small class="text-secondary"> 2 minutes ago</small>
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex flex-column gap-1">
+                <div>Your password will expire soon.</div>
+                <small class="text-secondary"> 2 minutes ago</small>
+              </div>
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-1.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Alice uploaded a new profile picture.</div>
+                  <small class="text-secondary"> 1 hour ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+          </a>
+          <a href="#" class="list-group-item list-group-item-action p-5 border-dashed border-bottom">
+            <div class="d-flex justify-content-between">
+              <div class="d-flex gap-4 align-items-center">
+                <img src="./assets/images/avatar/avatar-2.jpg" alt="" class="avatar avatar-md rounded-circle" />
+                <div class="d-flex flex-column gap-1">
+                  <div>Mike sent you a friend request.</div>
+                  <small class="text-secondary"> 5 minutes ago</small>
+                </div>
+              </div>
+
+              <div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="10" height="10" viewBox="0 0 24 24" fill="currentColor"
+                  class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-info">
+                  <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                  <path d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                </svg>
+              </div>
+            </div>
+            <div class="d-flex gap-2 align-items-center mt-4">
+              <button type="button" class="btn btn-primary btn-sm">Accept</button>
+              <button type="button" class="btn btn-white btn-sm">Decline</button>
+            </div>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="px-5 py-3 text-center bg-white position-absolute bottom-0 border-top border-dashed w-100 text-center">
+    <a href="#!" class="text-inherit">View all</a>
+  </div>
+</div>
+<!-- Modal of pages -->
+<div class="modal fade" id="searchModal" tabindex="-1" aria-labelledby="searchModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header border-0">
+        <input type="search" class="form-control border-0 rounded-0 ps-0 form-focus-none" id="globalSearchInput"
+          placeholder="Search any word..." aria-label="Search" aria-describedby="search-addon" />
+        <button type="button" class="btn btn-white btn-sm" data-bs-dismiss="modal" aria-label="Close">Esc</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+      <!-- container -->
+      <div class="custom-container">
+        <!-- row -->
+        <div class="row mb-6 g-6">
+          <div class="col-12">
+            <div class="bg-gradient-mixed p-8 py-10 rounded-3 p-lg-7 position-relative overflow-hidden">
+              <div class="d-flex align-items-center justify-content-between">
+                <div style="z-index: 2;">
+                  <!--heading-->
+                  <h1 class="fs-3">👋 Dashboard FinStudent,</h1>
+                  <p class="mb-0">Pantau kesehatan finansialmu dan prediksi akhir bulan secara real-time.</p>
+                  <h2 class="mt-4 text-white" id="currentBalance">Rp 0</h2>
+                  <p class="mb-0">Total Saldo Saat Ini</p>
+                </div>
+                <div class="d-none d-sm-block text-end" style="z-index: 1;">
+                  <img src="./assets/images/cat/lookaroundcat.gif" alt="Look around cat" style="max-height: 140px; width: auto; object-fit: contain; margin-right: -10px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Hover-Reveal Feature Cards CSS -->
+        <style>
+          .fin-card {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+          .fin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+          }
+          .fin-card .fin-value {
+            transition: transform 0.3s ease;
+          }
+          .fin-card .fin-detail {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 20px;
+            border-radius: 0 0 12px 12px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            z-index: 2;
+          }
+          .fin-card:hover .fin-detail {
+            transform: translateY(0);
+          }
+          .fin-card:hover .fin-value {
+            transform: translateY(-6px);
+          }
+          .fin-detail-leak { background: linear-gradient(180deg, rgba(255,243,205,0.95), rgba(255,243,205,1)); color: #856404; }
+          .fin-detail-predict { background: linear-gradient(180deg, rgba(209,231,221,0.95), rgba(209,231,221,1)); color: #0f5132; }
+          .fin-detail-survival { background: linear-gradient(180deg, rgba(207,244,252,0.95), rgba(207,244,252,1)); color: #055160; }
+          .fin-detail-health { background: linear-gradient(180deg, rgba(225,222,255,0.95), rgba(225,222,255,1)); color: #3d0a91; }
+
+          /* Mobile Optimizations */
+          @media (max-width: 767.98px) {
+            .fin-card .icon-lg { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+            .fin-card .icon-lg svg { width: 18px; height: 18px; }
+            .fin-card .card-body { padding: 1rem; gap: 0.5rem !important; }
+            .fin-value .fs-3 { font-size: 1.15rem !important; }
+            .fin-card .fw-semibold { font-size: 0.8rem; line-height: 1.2; }
+            
+            /* Transaction Table to Card List */
+            #dashboardTransactionTableBody, #dashboardTransactionTableBody tr, #dashboardTransactionTableBody td, #dashboardTransactionTableBody tbody {
+              display: block; width: 100%;
+            }
+            .table-responsive .table { border: none; }
+            .table-responsive thead { display: none; }
+            #dashboardTransactionTableBody tr:not(.tr-separator) {
+              margin-bottom: 1rem; 
+              border: 1px solid var(--ds-border-color);
+              border-radius: 0.75rem; 
+              padding: 1rem;
+              background-color: var(--ds-card-bg);
+              position: relative;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+            #dashboardTransactionTableBody tr.tr-separator {
+              background-color: transparent !important; 
+              border: none !important; 
+              padding: 0 !important;
+              margin-bottom: 0.75rem; 
+              font-size: 1.05rem; 
+              color: var(--ds-heading-color);
+            }
+            #dashboardTransactionTableBody tr.tr-separator td {
+              background: transparent !important;
+              padding: 0;
+            }
+            #dashboardTransactionTableBody td { border: none; padding: 0.2rem 0; }
+            #dashboardTransactionTableBody td:nth-child(1) { font-size: 0.95rem; font-weight: 600; color: var(--ds-heading-color); max-width: 60%; }
+            #dashboardTransactionTableBody td:nth-child(4) { font-size: 1rem; text-align: right; position: absolute; right: 1rem; top: 1rem; }
+            #dashboardTransactionTableBody td:nth-child(2),
+            #dashboardTransactionTableBody td:nth-child(3) { display: inline-block; margin-right: 0.5rem; font-size: 0.8rem; margin-top: 0.5rem; }
+          }
+
+          /* Hover interaction for touch screens */
+          @media (hover: none) {
+            .fin-detail {
+              transform: translateY(0);
+              position: relative;
+              border-radius: 0 0 12px 12px;
+              padding: 8px 12px;
+            }
+            .fin-card .card-body { padding-bottom: 0.5rem !important; }
+          }
+        </style>
+
+        <!-- row: Feature Cards -->
+        <div class="row row-cols-2 row-cols-xl-4 row-cols-md-2 mb-4 mb-md-6 g-3 g-md-6">
+          <!-- Money Leak Detector -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-warning-darker text-warning-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
+                  </div>
+                  <div class="fw-semibold">Money Leak</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="leakAmount">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-leak" id="leakDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Prediksi Akhir Bulan -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-success-darker text-success-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1" /><path d="M12 7v10" /></svg>
+                  </div>
+                  <div class="fw-semibold">Prediksi Akhir Bulan</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="predictionStatus">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-predict" id="predictionDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Daily Survival -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-info-darker text-info-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                  </div>
+                  <div class="fw-semibold">Daily Survival</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="dailyLimit">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-survival" id="dailyDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Health Status -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-primary-darker text-primary-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                  </div>
+                  <div class="fw-semibold">Health Status</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="healthStatus">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-health" id="healthDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+        </div>
+        <!-- row: Riwayat Transaksi Lengkap -->
+        <div class="row mb-4 mb-md-6">
+          <div class="col-12">
+            <div class="card card-lg">
+              <div class="card-header border-bottom d-flex flex-wrap justify-content-between align-items-center py-4 gap-2">
+                <h5 class="mb-0">Riwayat Transaksi</h5>
+                <div class="dropdown">
+                  <button class="btn btn-outline-primary dropdown-toggle rounded-pill px-4 shadow-sm" type="button" id="monthPickerDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    <i class="ti ti-calendar me-2"></i><span id="monthPickerLabel" class="fw-semibold">Pilih Bulan</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg rounded-4 border-0 mt-2" style="min-width: 280px; max-width: 100vw; background-color: var(--ds-card-bg);" aria-labelledby="monthPickerDropdownBtn">
+                    
+                    <!-- Year Navigator -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <button type="button" class="btn btn-sm btn-light rounded-circle" id="mpPrevYear"><i class="ti ti-chevron-left"></i></button>
+                      <h6 class="mb-0 fw-bold" id="mpCurrentYear">2026</h6>
+                      <button type="button" class="btn btn-sm btn-light rounded-circle" id="mpNextYear"><i class="ti ti-chevron-right"></i></button>
+                    </div>
+                    
+                    <!-- Months Grid -->
+                    <div class="row g-2 text-center" id="mpMonthsGrid">
+                      <!-- Digenerate oleh JS -->
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="d-flex justify-content-between mt-3 pt-3 border-top" style="border-color: var(--ds-border-color) !important;">
+                      <a href="javascript:void(0)" class="text-primary fw-semibold text-decoration-none px-2 py-1 rounded hover-primary" id="mpClearBtn">Clear</a>
+                      <a href="javascript:void(0)" class="text-primary fw-semibold text-decoration-none px-2 py-1 rounded hover-primary" id="mpThisMonthBtn">Bulan Ini</a>
+                    </div>
+                    
+                  </div>
+                </div>
+
+                <style>
+                  .mp-month-item { 
+                    cursor: pointer; 
+                    transition: all 0.2s ease-in-out; 
+                    color: var(--ds-heading-color); 
+                    font-size: 0.9rem;
+                    user-select: none;
+                  }
+                  .mp-month-item:hover { 
+                    background-color: rgba(var(--ds-primary-rgb), 0.1); 
+                    color: var(--ds-primary); 
+                  }
+                  .mp-month-item.active { 
+                    background-color: var(--ds-primary); 
+                    color: #fff !important; 
+                    font-weight: 600; 
+                    box-shadow: 0 4px 6px rgba(var(--ds-primary-rgb), 0.3);
+                  }
+                  .hover-primary:hover {
+                    background-color: rgba(var(--ds-primary-rgb), 0.1);
+                  }
+                </style>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                  <table class="table table-hover text-nowrap mb-0">
+                    <thead class="table-light sticky-top">
+                      <tr>
+                        <th>Deskripsi</th>
+                        <th>Kategori</th>
+                        <th>Tipe</th>
+                        <th>Jumlah</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashboardTransactionTableBody">
+                      <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- row -->
+        <div class="row g-6 mb-6">
+          <div class="col-xl-8 col-12">
+            <!-- card -->
+            <div class="card card-lg">
+              <!--  card body -->
+              <div class="card-body d-flex flex-column gap-5">
+                <div class="mb-4">
+                  <!-- heading -->
+                  <h5 class="mb-0">Arus Keuangan</h5>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-3">
+                  <ul class="nav nav-pills-white nav-fill" id="chartTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="current-week-tab" data-bs-toggle="pill"
+                        data-bs-target="#current-week" type="button" role="tab" aria-controls="current-week"
+                        aria-selected="true">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-primary">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Total Pemasukan</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryIncome">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="past-week-tab" data-bs-toggle="pill" data-bs-target="#past-week"
+                        type="button" role="tab" aria-controls="past-week" aria-selected="false">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-warning">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Total Pengeluaran</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryExpense">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="savings-tab" data-bs-toggle="pill" data-bs-target="#savings"
+                        type="button" role="tab" aria-controls="savings" aria-selected="false">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-success">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Tabungan Masuk</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summarySavings">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-content" id="chartTabsContent">
+                  <div class="tab-pane fade show active" id="current-week" role="tabpanel"
+                    aria-labelledby="current-week-tab">
+                    <div id="totalIncomeChart"></div>
+                  </div>
+                  <div class="tab-pane fade" id="past-week" role="tabpanel" aria-labelledby="past-week-tab">
+                    <div id="totalExpensesChart"></div>
+                  </div>
+                  <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
+                    <div id="totalSavingsChart"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-12">
+            <!-- card -->
+            <div class="card card-lg">
+              <!-- card body -->
+              <div class="card-body">
+                <!-- heading -->
+                <h5 class="mb-2">Kebutuhan vs Keinginan vs Tabungan</h5>
+                <p class="small text-secondary mb-4">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#624bff;" class="me-1"></span>Kebutuhan
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;" class="ms-2 me-1"></span>Keinginan
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;" class="ms-2 me-1"></span>Tabungan
+                </p>
+                <div id="categoryBreakdownChart" class="d-flex justify-content-center"></div>
+                <!-- table -->
+                <table class="table table-sm table-borderless mb-0 mt-5">
+                  <tbody id="categoryBreakdownTable">
+                    <tr>
+                      <td class="text-center text-muted" colspan="2">Belum ada data</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- row -->
+        <div class="row g-6 mb-6">
+          <div class="col-xl-4 col-12">
+            <div class="card card-lg h-100 bg-primary text-white">
+              <div class="card-body">
+                <h5 class="mb-4 text-white-50">Total Tabungan</h5>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <div class="icon-shape icon-lg rounded-circle bg-white text-primary">
+                    <i class="ti ti-pig-money fs-3"></i>
+                  </div>
+                  <div>
+                    <div class="text-white-50 small">Saldo Tersimpan</div>
+                    <div class="fs-2 fw-bold text-white" id="totalSavingsDisplay">Rp 0</div>
+                  </div>
+                </div>
+                <div class="mt-4 pt-4 border-top border-white-50">
+                  <p class="small text-white-50 mb-3">Gunakan Buku Kas Tabungan untuk mencatat penambahan atau penarikan uang tabunganmu.</p>
+                  <a href="savings.html" class="btn btn-light w-100 fw-semibold text-primary">Buka Buku Tabungan</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Libs JS -->
+<script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="./assets/libs/simplebar/dist/simplebar.min.js"></script>
+
+<!-- Theme JS -->
+<script src="./assets/js/theme.min.js"></script>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+    <p class="text-center">© All rights reserved by <a href="https://codescandy.com" target="_blank">CodesCandy</a>. Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
+</body>
+</html>
+
+  <!-- jsvectormap -->
+  <script src="./assets/js/vendors/sidebarnav.js"></script>
+  <script src="./assets/libs/jsvectormap/dist/js/jsvectormap.min.js"></script>
+  <script src="./assets/libs/jsvectormap/dist/maps/world.js"></script>
+  <script src="./assets/libs/jsvectormap/dist/maps/world-merc.js"></script>
+  <script src="./assets/libs/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="./assets/js/vendors/chart.js"></script>
+  <script src="./assets/libs/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="./assets/js/vendors/choice.js"></script>
+  <script src="./assets/libs/swiper/swiper-bundle.min.js"></script>
+  <script src="./assets/js/vendors/swiper.js"></script>
+  <script src="./assets/js/storage.js"></script>
+  <script src="./assets/js/app.js"></script>
+</body>
+
+</html>

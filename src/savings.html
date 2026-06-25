@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  @@include("partials/head/head-meta.html")
+  <title>Target Menabung | FinStudent</title>
+  @@include("partials/head/head-links.html")
+  <style>
+    /* Hero Input reset */
+    #savingAmountDisplay:focus { outline: none; }
+    #savingAmountDisplay::placeholder { color: var(--ds-gray-400); }
+    #savingAmountDisplay { transition: color 0.3s ease; }
+    
+    /* Toggle Pills */
+    #savingTypePills .nav-link { transition: all 0.2s ease; border-radius: 6px; }
+    #savingTypePills .nav-link.active[data-type="tarik"] { background-color: rgba(220,53,69,0.15); color: #dc3545 !important; }
+    #savingTypePills .nav-link.active[data-type="simpan"] { background-color: rgba(16,185,129,0.15); color: #10b981 !important; }
+
+    /* Mobile Optimizations for Table */
+    @media (max-width: 767.98px) {
+      /* Transaction Table to Card List */
+      #savingsTable, #savingsTable tr, #savingsTable td, #savingsTable tbody {
+        display: block; width: 100%;
+      }
+      .table-responsive .table { border: none; }
+      .table-responsive thead { display: none; }
+      #savingsTableBody tr {
+        margin-bottom: 1rem; 
+        border: 1px solid var(--ds-border-color);
+        border-radius: 0.75rem; 
+        padding: 1rem;
+        background-color: var(--ds-card-bg);
+        position: relative;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      }
+      #savingsTableBody td { border: none; padding: 0.2rem 0; }
+      #savingsTableBody td:nth-child(1) { /* Tanggal */
+        font-size: 0.85rem; color: var(--ds-gray-500); display: block; margin-bottom: 0.25rem; border-bottom: 1px solid var(--ds-border-color); padding-bottom: 0.5rem;
+      }
+      #savingsTableBody td:nth-child(3) { /* Deskripsi */
+        font-size: 1.05rem; font-weight: 600; color: var(--ds-heading-color); max-width: 80%; display: block; margin-top: 0.5rem;
+      }
+      #savingsTableBody td:nth-child(4) { /* Nominal */
+        font-size: 1.15rem; font-weight: bold; text-align: right; position: absolute; right: 1rem; top: 3.2rem;
+      }
+      #savingsTableBody td:nth-child(2) { /* Tipe */
+        display: inline-block; margin-right: 0.5rem; font-size: 0.8rem; margin-top: 0.5rem;
+      }
+      #savingsTableBody td:nth-child(5) { /* Aksi */
+        position: absolute; right: 1rem; top: 0.75rem; padding: 0; margin: 0;
+      }
+      #savingsTableBody td:nth-child(5) button {
+        padding: 0.25rem 0.5rem; font-size: 0.8rem;
+      }
+      
+      .custom-container .row.mb-6 { margin-bottom: 1.5rem !important; }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Vertical Sidebar -->
+  <div>
+    @@include("partials/sidebar-collapse.html")
+
+    <!-- Main Content -->
+    <div id="content" class="position-relative h-100">
+      @@include("partials/topbar-second.html")
+      <div class="custom-container">
+        <div class="row mb-6">
+          <div class="col-lg-12 col-md-12 col-12">
+            <!-- Page header -->
+            <div class="mb-5">
+              <h1 class="mb-3 h2">Target Menabung</h1>
+              <p>Kumpulkan uang untuk target masa depanmu. Uang yang ditabung akan dipisahkan dari saldo aktif harianmu.
+              </p>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xl-4 col-lg-5 col-12 mb-6">
+            <div class="card card-lg">
+              <div class="card-body p-6">
+                <h5 class="mb-4">Catat Tabungan</h5>
+                <form id="savingsForm" class="needs-validation" novalidate>
+                  <!-- Nominal Hero Input -->
+                  <div class="mb-5 text-center">
+                    <label for="savingAmountDisplay" class="form-label text-muted fw-semibold mb-2">Nominal Tabungan</label>
+                    <div class="position-relative d-flex justify-content-center align-items-center">
+                      <span class="fs-2 fw-bold text-muted me-2">Rp</span>
+                      <input type="text" inputmode="numeric" class="form-control form-control-lg border-0 bg-transparent text-center fw-bold text-success p-0" id="savingAmountDisplay" placeholder="0" required style="font-size: 3.5rem; box-shadow: none; max-width: 250px;" autocomplete="off" />
+                      <input type="hidden" id="saving_amount" required />
+                    </div>
+                    <hr class="w-75 mx-auto mt-2 mb-0 border-success opacity-25">
+                  </div>
+
+                  <!-- Tipe Tabungan (Toggle) -->
+                  <div class="mb-4">
+                    <label class="form-label d-block text-muted">Aksi Tabungan</label>
+                    <ul class="nav nav-pills nav-fill bg-gray-100 rounded-3 p-1" id="savingTypePills">
+                      <li class="nav-item">
+                        <button type="button" class="nav-link active py-2 px-3 fw-semibold text-success" data-type="simpan" style="background-color: rgba(16,185,129,0.15);"><i class="ti ti-pig-money me-1"></i> Nabung</button>
+                      </li>
+                      <li class="nav-item">
+                        <button type="button" class="nav-link py-2 px-3 fw-semibold text-muted" data-type="tarik"><i class="ti ti-hand-grab me-1"></i> Tarik</button>
+                      </li>
+                    </ul>
+                    <input type="hidden" id="saving_type" value="simpan" />
+                  </div>
+
+                  <!-- Tanggal -->
+                  <div class="mb-4">
+                    <label for="saving_date" class="form-label text-muted">Tanggal</label>
+                    <input type="date" class="form-control" id="saving_date" required />
+                  </div>
+
+                  <!-- Deskripsi -->
+                  <div class="mb-5">
+                    <label for="saving_desc" class="form-label text-muted">Deskripsi (Opsional)</label>
+                    <input type="text" class="form-control bg-gray-100 border-0" id="saving_desc"
+                      placeholder="Contoh: Nabung sisa uang jajan" />
+                  </div>
+
+                  <div class="d-grid">
+                    <button class="btn btn-primary btn-lg rounded-pill shadow-sm" type="submit" id="saveBtn"><i class="ti ti-check me-2"></i>Simpan Transaksi</button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-8 col-lg-7 col-12">
+            <div class="card card-lg">
+              <div class="card-header border-bottom-0">
+                <h5 class="mb-0">Riwayat Tabungan</h5>
+              </div>
+              <div class="table-responsive">
+                <table class="table text-nowrap mb-0 table-centered table-hover" id="savingsTable">
+                  <thead>
+                    <tr>
+                      <th>Tanggal</th>
+                      <th>Tipe</th>
+                      <th>Deskripsi</th>
+                      <th>Nominal</th>
+                      <th>Aksi</th>
+                    </tr>
+                  </thead>
+                  <tbody id="savingsTableBody">
+                    <tr>
+                      <td colspan="5" class="text-center text-muted">Memuat data...</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  </div>
+
+  <!-- Custom Toast Alert for Savings -->
+  <div id="catToast" class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050; display: none;">
+    <div class="toast show align-items-center border-0 shadow-lg" role="alert" aria-live="assertive"
+      aria-atomic="true" style="border-radius: 16px; max-width: 400px;">
+      <div class="d-flex p-3">
+        <img src="@@webRoot/assets/images/cat/thumbs_up.gif" alt="Cat Thumbs Up"
+          style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px;" class="me-3">
+        <div class="toast-body fw-bold d-flex align-items-center" style="font-size: 18px;">
+          Nabung dikit-dikit lama-lama jadi bukit
+        </div>
+        <button type="button" class="btn-close me-2 m-auto"
+          onclick="document.getElementById('catToast').style.display='none';" aria-label="Close"></button>
+      </div>
+    </div>
+  </div>
+
+  @@include("partials/scripts.html")
+  <script src="@@webRoot/assets/js/storage.js"></script>
+  <script src="@@webRoot/assets/js/app.js"></script>
+</body>
+
+</html>

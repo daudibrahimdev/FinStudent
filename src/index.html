@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  @@include("partials/head/head-meta.html")
+  <title>Dasher Free - Responsive Bootstrap 5 Admin Dashboard</title>
+  <link rel="stylesheet" href="@@webRoot/node_modules/swiper/swiper-bundle.min.css" />
+  @@include("partials/head/head-links.html")
+</head>
+
+<body>
+  <!-- Vertical Sidebar -->
+  <div>
+    @@include("partials/sidebar-collapse.html")
+
+    <!-- Main Content -->
+    <div id="content" class="position-relative h-100">
+      @@include("partials/topbar-second.html")
+      <!-- container -->
+      <div class="custom-container">
+        <!-- row -->
+        <div class="row mb-6 g-6">
+          <div class="col-12">
+            <div class="bg-gradient-mixed p-8 py-10 rounded-3 p-lg-7 position-relative overflow-hidden">
+              <div class="d-flex align-items-center justify-content-between">
+                <div style="z-index: 2;">
+                  <!--heading-->
+                  <h1 class="fs-3">👋 Dashboard FinStudent,</h1>
+                  <p class="mb-0">Pantau kesehatan finansialmu dan prediksi akhir bulan secara real-time.</p>
+                  <h2 class="mt-4 text-white" id="currentBalance">Rp 0</h2>
+                  <p class="mb-0">Total Saldo Saat Ini</p>
+                </div>
+                <div class="d-none d-sm-block text-end" style="z-index: 1;">
+                  <img src="@@webRoot/assets/images/cat/lookaroundcat.gif" alt="Look around cat" style="max-height: 140px; width: auto; object-fit: contain; margin-right: -10px;">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Hover-Reveal Feature Cards CSS -->
+        <style>
+          .fin-card {
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+          }
+          .fin-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+          }
+          .fin-card .fin-value {
+            transition: transform 0.3s ease;
+          }
+          .fin-card .fin-detail {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px 20px;
+            border-radius: 0 0 12px 12px;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            font-size: 0.8rem;
+            line-height: 1.4;
+            z-index: 2;
+          }
+          .fin-card:hover .fin-detail {
+            transform: translateY(0);
+          }
+          .fin-card:hover .fin-value {
+            transform: translateY(-6px);
+          }
+          .fin-detail-leak { background: linear-gradient(180deg, rgba(255,243,205,0.95), rgba(255,243,205,1)); color: #856404; }
+          .fin-detail-predict { background: linear-gradient(180deg, rgba(209,231,221,0.95), rgba(209,231,221,1)); color: #0f5132; }
+          .fin-detail-survival { background: linear-gradient(180deg, rgba(207,244,252,0.95), rgba(207,244,252,1)); color: #055160; }
+          .fin-detail-health { background: linear-gradient(180deg, rgba(225,222,255,0.95), rgba(225,222,255,1)); color: #3d0a91; }
+
+          /* Mobile Optimizations */
+          @media (max-width: 767.98px) {
+            .fin-card .icon-lg { width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; }
+            .fin-card .icon-lg svg { width: 18px; height: 18px; }
+            .fin-card .card-body { padding: 1rem; gap: 0.5rem !important; }
+            .fin-value .fs-3 { font-size: 1.15rem !important; }
+            .fin-card .fw-semibold { font-size: 0.8rem; line-height: 1.2; }
+            
+            /* Transaction Table to Card List */
+            #dashboardTransactionTableBody, #dashboardTransactionTableBody tr, #dashboardTransactionTableBody td, #dashboardTransactionTableBody tbody {
+              display: block; width: 100%;
+            }
+            .table-responsive .table { border: none; }
+            .table-responsive thead { display: none; }
+            #dashboardTransactionTableBody tr:not(.tr-separator) {
+              margin-bottom: 1rem; 
+              border: 1px solid var(--ds-border-color);
+              border-radius: 0.75rem; 
+              padding: 1rem;
+              background-color: var(--ds-card-bg);
+              position: relative;
+              box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            }
+            #dashboardTransactionTableBody tr.tr-separator {
+              background-color: transparent !important; 
+              border: none !important; 
+              padding: 0 !important;
+              margin-bottom: 0.75rem; 
+              font-size: 1.05rem; 
+              color: var(--ds-heading-color);
+            }
+            #dashboardTransactionTableBody tr.tr-separator td {
+              background: transparent !important;
+              padding: 0;
+            }
+            #dashboardTransactionTableBody td { border: none; padding: 0.2rem 0; }
+            #dashboardTransactionTableBody td:nth-child(1) { font-size: 0.95rem; font-weight: 600; color: var(--ds-heading-color); max-width: 60%; }
+            #dashboardTransactionTableBody td:nth-child(4) { font-size: 1rem; text-align: right; position: absolute; right: 1rem; top: 1rem; }
+            #dashboardTransactionTableBody td:nth-child(2),
+            #dashboardTransactionTableBody td:nth-child(3) { display: inline-block; margin-right: 0.5rem; font-size: 0.8rem; margin-top: 0.5rem; }
+          }
+
+          /* Hover interaction for touch screens */
+          @media (hover: none) {
+            .fin-detail {
+              transform: translateY(0);
+              position: relative;
+              border-radius: 0 0 12px 12px;
+              padding: 8px 12px;
+            }
+            .fin-card .card-body { padding-bottom: 0.5rem !important; }
+          }
+        </style>
+
+        <!-- row: Feature Cards -->
+        <div class="row row-cols-2 row-cols-xl-4 row-cols-md-2 mb-4 mb-md-6 g-3 g-md-6">
+          <!-- Money Leak Detector -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-warning-darker text-warning-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0" /><path d="M17 17h-11v-14h-2" /><path d="M6 5l14 1l-1 7h-13" /></svg>
+                  </div>
+                  <div class="fw-semibold">Money Leak</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="leakAmount">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-leak" id="leakDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Prediksi Akhir Bulan -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-success-darker text-success-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M14.8 9a2 2 0 0 0 -1.8 -1h-2a2 2 0 1 0 0 4h2a2 2 0 1 1 0 4h-2a2 2 0 0 1 -1.8 -1" /><path d="M12 7v10" /></svg>
+                  </div>
+                  <div class="fw-semibold">Prediksi Akhir Bulan</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="predictionStatus">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-predict" id="predictionDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Daily Survival -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-info-darker text-info-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
+                  </div>
+                  <div class="fw-semibold">Daily Survival</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="dailyLimit">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-survival" id="dailyDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+
+          <!-- Health Status -->
+          <div class="col">
+            <div class="card card-lg fin-card">
+              <div class="card-body d-flex flex-column gap-4 pb-5">
+                <div class="d-flex align-items-center gap-3">
+                  <div class="icon-shape icon-lg rounded-circle bg-primary-darker text-primary-lighter">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M19.5 12.572l-7.5 7.428l-7.5 -7.428a5 5 0 1 1 7.5 -6.566a5 5 0 1 1 7.5 6.572" /></svg>
+                  </div>
+                  <div class="fw-semibold">Health Status</div>
+                </div>
+                <div class="fin-value">
+                  <div class="fs-3 fw-bold" id="healthStatus">—</div>
+                </div>
+              </div>
+              <div class="fin-detail fin-detail-health" id="healthDesc">Arahkan kursor untuk melihat detail</div>
+            </div>
+          </div>
+        </div>
+        <!-- row: Riwayat Transaksi Lengkap -->
+        <div class="row mb-4 mb-md-6">
+          <div class="col-12">
+            <div class="card card-lg">
+              <div class="card-header border-bottom d-flex flex-wrap justify-content-between align-items-center py-4 gap-2">
+                <h5 class="mb-0">Riwayat Transaksi</h5>
+                <div class="dropdown">
+                  <button class="btn btn-outline-primary dropdown-toggle rounded-pill px-4 shadow-sm" type="button" id="monthPickerDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+                    <i class="ti ti-calendar me-2"></i><span id="monthPickerLabel" class="fw-semibold">Pilih Bulan</span>
+                  </button>
+                  <div class="dropdown-menu dropdown-menu-end p-3 shadow-lg rounded-4 border-0 mt-2" style="min-width: 280px; max-width: 100vw; background-color: var(--ds-card-bg);" aria-labelledby="monthPickerDropdownBtn">
+                    
+                    <!-- Year Navigator -->
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                      <button type="button" class="btn btn-sm btn-light rounded-circle" id="mpPrevYear"><i class="ti ti-chevron-left"></i></button>
+                      <h6 class="mb-0 fw-bold" id="mpCurrentYear">2026</h6>
+                      <button type="button" class="btn btn-sm btn-light rounded-circle" id="mpNextYear"><i class="ti ti-chevron-right"></i></button>
+                    </div>
+                    
+                    <!-- Months Grid -->
+                    <div class="row g-2 text-center" id="mpMonthsGrid">
+                      <!-- Digenerate oleh JS -->
+                    </div>
+                    
+                    <!-- Quick Actions -->
+                    <div class="d-flex justify-content-between mt-3 pt-3 border-top" style="border-color: var(--ds-border-color) !important;">
+                      <a href="javascript:void(0)" class="text-primary fw-semibold text-decoration-none px-2 py-1 rounded hover-primary" id="mpClearBtn">Clear</a>
+                      <a href="javascript:void(0)" class="text-primary fw-semibold text-decoration-none px-2 py-1 rounded hover-primary" id="mpThisMonthBtn">Bulan Ini</a>
+                    </div>
+                    
+                  </div>
+                </div>
+
+                <style>
+                  .mp-month-item { 
+                    cursor: pointer; 
+                    transition: all 0.2s ease-in-out; 
+                    color: var(--ds-heading-color); 
+                    font-size: 0.9rem;
+                    user-select: none;
+                  }
+                  .mp-month-item:hover { 
+                    background-color: rgba(var(--ds-primary-rgb), 0.1); 
+                    color: var(--ds-primary); 
+                  }
+                  .mp-month-item.active { 
+                    background-color: var(--ds-primary); 
+                    color: #fff !important; 
+                    font-weight: 600; 
+                    box-shadow: 0 4px 6px rgba(var(--ds-primary-rgb), 0.3);
+                  }
+                  .hover-primary:hover {
+                    background-color: rgba(var(--ds-primary-rgb), 0.1);
+                  }
+                </style>
+              </div>
+              <div class="card-body p-0">
+                <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+                  <table class="table table-hover text-nowrap mb-0">
+                    <thead class="table-light sticky-top">
+                      <tr>
+                        <th>Deskripsi</th>
+                        <th>Kategori</th>
+                        <th>Tipe</th>
+                        <th>Jumlah</th>
+                      </tr>
+                    </thead>
+                    <tbody id="dashboardTransactionTableBody">
+                      <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- row -->
+        <div class="row g-6 mb-6">
+          <div class="col-xl-8 col-12">
+            <!-- card -->
+            <div class="card card-lg">
+              <!--  card body -->
+              <div class="card-body d-flex flex-column gap-5">
+                <div class="mb-4">
+                  <!-- heading -->
+                  <h5 class="mb-0">Arus Keuangan</h5>
+                </div>
+                <div class="bg-gray-100 p-3 rounded-3">
+                  <ul class="nav nav-pills-white nav-fill" id="chartTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active" id="current-week-tab" data-bs-toggle="pill"
+                        data-bs-target="#current-week" type="button" role="tab" aria-controls="current-week"
+                        aria-selected="true">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-primary">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Total Pemasukan</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryIncome">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="past-week-tab" data-bs-toggle="pill" data-bs-target="#past-week"
+                        type="button" role="tab" aria-controls="past-week" aria-selected="false">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-warning">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Total Pengeluaran</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryExpense">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link" id="savings-tab" data-bs-toggle="pill" data-bs-target="#savings"
+                        type="button" role="tab" aria-controls="savings" aria-selected="false">
+                        <span class="d-flex flex-column">
+                          <span class="d-flex align-items-center gap-2">
+                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
+                                fill="currentColor"
+                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-success">
+                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
+                                <path
+                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
+                              </svg></span><span>Tabungan Masuk</span>
+                          </span>
+                          <span class="text-start fs-3 fw-semibold mt-2" id="summarySavings">Rp 0</span>
+                        </span>
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+
+                <div class="tab-content" id="chartTabsContent">
+                  <div class="tab-pane fade show active" id="current-week" role="tabpanel"
+                    aria-labelledby="current-week-tab">
+                    <div id="totalIncomeChart"></div>
+                  </div>
+                  <div class="tab-pane fade" id="past-week" role="tabpanel" aria-labelledby="past-week-tab">
+                    <div id="totalExpensesChart"></div>
+                  </div>
+                  <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
+                    <div id="totalSavingsChart"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-xl-4 col-12">
+            <!-- card -->
+            <div class="card card-lg">
+              <!-- card body -->
+              <div class="card-body">
+                <!-- heading -->
+                <h5 class="mb-2">Kebutuhan vs Keinginan vs Tabungan</h5>
+                <p class="small text-secondary mb-4">
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#624bff;" class="me-1"></span>Kebutuhan
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;" class="ms-2 me-1"></span>Keinginan
+                  <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;" class="ms-2 me-1"></span>Tabungan
+                </p>
+                <div id="categoryBreakdownChart" class="d-flex justify-content-center"></div>
+                <!-- table -->
+                <table class="table table-sm table-borderless mb-0 mt-5">
+                  <tbody id="categoryBreakdownTable">
+                    <tr>
+                      <td class="text-center text-muted" colspan="2">Belum ada data</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- row -->
+        <div class="row g-6 mb-6">
+          <div class="col-xl-4 col-12">
+            <div class="card card-lg h-100 bg-primary text-white">
+              <div class="card-body">
+                <h5 class="mb-4 text-white-50">Total Tabungan</h5>
+                <div class="d-flex align-items-center gap-3 mb-4">
+                  <div class="icon-shape icon-lg rounded-circle bg-white text-primary">
+                    <i class="ti ti-pig-money fs-3"></i>
+                  </div>
+                  <div>
+                    <div class="text-white-50 small">Saldo Tersimpan</div>
+                    <div class="fs-2 fw-bold text-white" id="totalSavingsDisplay">Rp 0</div>
+                  </div>
+                </div>
+                <div class="mt-4 pt-4 border-top border-white-50">
+                  <p class="small text-white-50 mb-3">Gunakan Buku Kas Tabungan untuk mencatat penambahan atau penarikan uang tabunganmu.</p>
+                  <a href="savings.html" class="btn btn-light w-100 fw-semibold text-primary">Buka Buku Tabungan</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  @@include("partials/scripts.html")
+  <!-- jsvectormap -->
+  <script src="@@webRoot/assets/js/vendors/sidebarnav.js"></script>
+  <script src="@@webRoot/node_modules/jsvectormap/dist/js/jsvectormap.min.js"></script>
+  <script src="@@webRoot/node_modules/jsvectormap/dist/maps/world.js"></script>
+  <script src="@@webRoot/node_modules/jsvectormap/dist/maps/world-merc.js"></script>
+  <script src="@@webRoot/node_modules/apexcharts/dist/apexcharts.min.js"></script>
+  <script src="@@webRoot/assets/js/vendors/chart.js"></script>
+  <script src="@@webRoot/node_modules/choices.js/public/assets/scripts/choices.min.js"></script>
+  <script src="@@webRoot/assets/js/vendors/choice.js"></script>
+  <script src="@@webRoot/node_modules/swiper/swiper-bundle.min.js"></script>
+  <script src="@@webRoot/assets/js/vendors/swiper.js"></script>
+  <script src="@@webRoot/assets/js/storage.js"></script>
+  <script src="@@webRoot/assets/js/app.js"></script>
+</body>
+
+</html>
