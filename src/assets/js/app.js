@@ -15,6 +15,106 @@ document.addEventListener('DOMContentLoaded', async () => {
     new Date(dateString).toLocaleDateString('id-ID', { year: 'numeric', month: 'short', day: 'numeric' });
 
   // ==========================================
+  // MOBILE FEED RENDERER (shared across pages)
+  // ==========================================
+  const renderMobileFeed = (containerId, items, feedType, deleteCallback) => {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    container.innerHTML = '';
+    if (!items || items.length === 0) {
+      container.innerHTML = '<div class="text-center text-muted py-4">Belum ada data.</div>';
+      return;
+    }
+
+    let lastDateStr = null;
+    items.forEach(item => {
+      const itemDate = formatDate(item.date);
+      if (itemDate !== lastDateStr) {
+        const header = document.createElement('div');
+        header.className = 'feed-date-header';
+        header.innerHTML = `<i class="ti ti-calendar-event me-1"></i> ${itemDate}`;
+        container.appendChild(header);
+        lastDateStr = itemDate;
+      }
+
+      const div = document.createElement('div');
+      div.className = 'feed-item';
+
+      let iconClass, iconType, desc, metaBadges, sign, amountClass, amount;
+
+      if (feedType === 'saving') {
+        iconClass = item.type === 'simpan' ? 'ti-piggy-bank' : 'ti-hand-grab';
+        iconType = item.type === 'simpan' ? 'saving' : 'expense';
+        desc = item.description || (item.type === 'simpan' ? 'Menabung' : 'Penarikan');
+        const badgeClass = item.type === 'simpan' ? 'saving-in' : 'saving-out';
+        const badgeLabel = item.type === 'simpan' ? 'Simpan' : 'Tarik';
+        metaBadges = `<span class="meta-badge ${badgeClass}">${badgeLabel}</span>`;
+        sign = item.type === 'simpan' ? '+' : '-';
+        amountClass = item.type === 'simpan' ? 'saving' : 'expense';
+        amount = parseFloat(item.amount);
+      } else if (feedType === 'dashboard') {
+        if (item.type === 'simpan' || item.type === 'tarik') {
+          iconClass = 'ti-piggy-bank';
+          iconType = 'saving';
+          desc = item.description || 'Menabung';
+          const badgeClass = item.type === 'simpan' ? 'saving-in' : 'saving-out';
+          const badgeLabel = item.type === 'simpan' ? 'Tabungan Masuk' : 'Tabungan Keluar';
+          metaBadges = `<span class="meta-badge ${badgeClass}">${badgeLabel}</span>`;
+          sign = item.type === 'simpan' ? '+' : '-';
+          amountClass = 'saving';
+        } else {
+          iconClass = typeof FinCategories !== 'undefined' ? FinCategories.getIcon(item.type === 'pengeluaran' ? item.nature : 'pemasukan', item.category) : 'ti-circle';
+          iconType = item.type === 'pemasukan' ? 'income' : 'expense';
+          desc = item.description || '-';
+          const typeBadgeClass = item.type === 'pemasukan' ? 'income' : 'expense';
+          const typeBadgeLabel = item.type === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran';
+          metaBadges = `<span class="meta-badge ${typeBadgeClass}">${typeBadgeLabel}</span>`;
+          if (item.category) metaBadges += ` <span>${item.category}</span>`;
+          if (item.nature === 'keinginan') metaBadges += ` <span class="meta-badge keinginan">Keinginan</span>`;
+          sign = item.type === 'pemasukan' ? '+' : '-';
+          amountClass = item.type === 'pemasukan' ? 'income' : 'expense';
+        }
+        amount = parseFloat(item.amount);
+      } else {
+        // transaction
+        iconClass = typeof FinCategories !== 'undefined' ? FinCategories.getIcon(item.type === 'pengeluaran' ? item.nature : 'pemasukan', item.category) : 'ti-circle';
+        iconType = item.type === 'pemasukan' ? 'income' : 'expense';
+        desc = item.description || '-';
+        const typeBadgeClass = item.type === 'pemasukan' ? 'income' : 'expense';
+        const typeBadgeLabel = item.type === 'pemasukan' ? 'Pemasukan' : 'Pengeluaran';
+        metaBadges = `<span class="meta-badge ${typeBadgeClass}">${typeBadgeLabel}</span>`;
+        if (item.category) metaBadges += ` <span>${item.category}</span>`;
+        if (item.nature === 'keinginan') metaBadges += ` <span class="meta-badge keinginan">Keinginan</span>`;
+        if (item.is_periodic && item.amortization_days > 1) metaBadges += ` <span class="meta-badge" style="background:rgba(6,182,212,0.1);color:#0891b2;">÷${item.amortization_days}h</span>`;
+        sign = item.type === 'pemasukan' ? '+' : '-';
+        amountClass = item.type === 'pemasukan' ? 'income' : 'expense';
+        amount = parseFloat(item.amount);
+      }
+
+      const deleteBtn = deleteCallback ? `<button class="feed-delete" data-id="${item.id}"><i class="ti ti-trash"></i></button>` : '';
+
+      div.innerHTML = `
+        <div class="feed-icon ${iconType}"><i class="ti ${iconClass}"></i></div>
+        <div class="feed-info">
+          <div class="feed-desc">${desc}</div>
+          <div class="feed-meta">${metaBadges}</div>
+        </div>
+        <div class="feed-amount ${amountClass}">${sign}${formatRupiah(amount)}</div>
+        ${deleteBtn}
+      `;
+
+      if (deleteCallback) {
+        const delBtn = div.querySelector('.feed-delete');
+        if (delBtn) {
+          delBtn.addEventListener('click', () => deleteCallback(item.id));
+        }
+      }
+
+      container.appendChild(div);
+    });
+  };
+
+  // ==========================================
   // ROUTER / MIDDLEWARE
   // ==========================================
   let routerSetupData = null;
@@ -109,11 +209,11 @@ document.addEventListener('DOMContentLoaded', async () => {
   if (transactionForm) {
     const tableBody = document.getElementById('tableBody');
     const typeInput = document.getElementById('type');
-    const typePills = document.getElementById('typePills');
+    const typeSelectWrapper = document.getElementById('typeSelectWrapper');
     const categorySelect = document.getElementById('category');
     const natureGroup = document.getElementById('natureGroup');
     const natureInput = document.getElementById('nature');
-    const naturePills = document.getElementById('naturePills');
+    const natureSelectWrapper = document.getElementById('natureSelectWrapper');
     const amortGroup = document.getElementById('amortizationGroup');
     const amortDaysInput = document.getElementById('amortizationDays');
     const amortPreview = document.getElementById('amortizationPreview');
@@ -178,30 +278,24 @@ document.addEventListener('DOMContentLoaded', async () => {
     };
 
     // --- Event Listeners ---
-    if (typePills) {
-      typePills.querySelectorAll('[data-type]').forEach(btn => {
-        btn.addEventListener('click', () => {
-          typePills.querySelectorAll('.nav-link').forEach(b => {
-            b.classList.remove('active', 'text-danger', 'text-success');
-            b.style.backgroundColor = '';
-            b.classList.add('text-muted');
-          });
-          btn.classList.add('active');
-          btn.classList.remove('text-muted');
-          const t = btn.dataset.type;
-          if (t === 'pengeluaran') {
-            btn.classList.add('text-danger');
-            btn.style.backgroundColor = 'rgba(220,53,69,0.15)';
-          } else {
-            btn.classList.add('text-success');
-            btn.style.backgroundColor = 'rgba(16,185,129,0.15)';
-          }
-          typeInput.value = t;
-          toggleNatureVisibility();
-          populateCategories();
-        });
-      });
-    }
+    // Type dropdown change
+    typeInput.addEventListener('change', () => {
+      const val = typeInput.value;
+      if (typeSelectWrapper) {
+        typeSelectWrapper.className = 'custom-styled-select ' + (val === 'pengeluaran' ? 'select-expense' : 'select-income');
+      }
+      toggleNatureVisibility();
+      populateCategories();
+    });
+
+    // Nature dropdown change
+    natureInput.addEventListener('change', () => {
+      const val = natureInput.value;
+      if (natureSelectWrapper) {
+        natureSelectWrapper.className = 'custom-styled-select ' + (val === 'kebutuhan' ? 'select-kebutuhan' : 'select-keinginan');
+      }
+      populateCategories();
+    });
 
     categorySelect.addEventListener('change', checkAmortization);
     amortDaysInput.addEventListener('input', updateAmortPreview);
@@ -219,16 +313,6 @@ document.addEventListener('DOMContentLoaded', async () => {
         updateAmortPreview();
       });
     }
-
-    // Nature pills toggle
-    naturePills.querySelectorAll('[data-nature]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        naturePills.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        natureInput.value = btn.dataset.nature;
-        populateCategories();
-      });
-    });
 
     // Init date and categories
     if (document.getElementById('date')) document.getElementById('date').valueAsDate = new Date();
@@ -299,6 +383,14 @@ document.addEventListener('DOMContentLoaded', async () => {
             }
           });
         });
+
+        // Render mobile feed
+        renderMobileFeed('txMobileFeed', transactions, 'transaction', async (id) => {
+          if (confirm('Hapus transaksi ini?')) {
+            await ApiService.deleteTransaction(id);
+            loadTransactions();
+          }
+        });
       } catch (err) {
         console.error("Load transactions error:", err);
         tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data.</td></tr>';
@@ -338,23 +430,11 @@ document.addEventListener('DOMContentLoaded', async () => {
         amountHidden.value = '';
         transactionForm.classList.remove('was-validated');
         
-        // Reset type pills
+        // Reset dropdowns
         typeInput.value = 'pengeluaran';
-        typePills.querySelectorAll('.nav-link').forEach(b => {
-          b.classList.remove('active', 'text-danger', 'text-success');
-          b.style.backgroundColor = '';
-          b.classList.add('text-muted');
-        });
-        const pengeluaranBtn = typePills.querySelector('[data-type="pengeluaran"]');
-        if(pengeluaranBtn) {
-          pengeluaranBtn.classList.add('active', 'text-danger');
-          pengeluaranBtn.classList.remove('text-muted');
-          pengeluaranBtn.style.backgroundColor = 'rgba(220,53,69,0.15)';
-        }
-
+        if (typeSelectWrapper) typeSelectWrapper.className = 'custom-styled-select select-expense';
         natureInput.value = 'kebutuhan';
-        naturePills.querySelectorAll('.nav-link').forEach(b => b.classList.remove('active'));
-        naturePills.querySelector('[data-nature="kebutuhan"]').classList.add('active');
+        if (natureSelectWrapper) natureSelectWrapper.className = 'custom-styled-select select-kebutuhan';
         toggleNatureVisibility();
         document.getElementById('date').valueAsDate = new Date();
 
@@ -544,6 +624,14 @@ document.addEventListener('DOMContentLoaded', async () => {
               loadSavings();
             }
           });
+        });
+
+        // Render mobile feed
+        renderMobileFeed('savingsMobileFeed', savings, 'saving', async (id) => {
+          if (confirm('Hapus riwayat tabungan ini?')) {
+            await ApiService.deleteSavingTransaction(id);
+            loadSavings();
+          }
         });
 
       } catch (err) {
@@ -909,6 +997,9 @@ document.addEventListener('DOMContentLoaded', async () => {
               });
             }
           }
+
+          // ---- Mobile Feed for Dashboard ----
+          renderMobileFeed('dashboardMobileFeed', allFiltered, 'dashboard');
 
           // ---- Line Charts ----
           if (typeof window.renderDashboardCharts === 'function') {

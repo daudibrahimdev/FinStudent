@@ -46,56 +46,106 @@
 <link rel="stylesheet" href="./assets/css/theme.min.css">
 
     <style>
-      /* Hero Input reset */
+      /* Custom Styled Select */
+      .custom-styled-select {
+        position: relative;
+      }
+      .custom-styled-select select {
+        appearance: none; -webkit-appearance: none;
+        padding: 0.65rem 2.5rem 0.65rem 1rem;
+        border-radius: 12px; border: 2px solid var(--ds-border-color);
+        background-color: var(--ds-card-bg); color: var(--ds-heading-color);
+        font-weight: 600; font-size: 0.95rem;
+        cursor: pointer; width: 100%;
+        transition: border-color 0.25s ease, box-shadow 0.25s ease, color 0.25s ease;
+      }
+      .custom-styled-select select:focus {
+        outline: none;
+      }
+      .custom-styled-select::after {
+        content: '\ea5e'; font-family: 'tabler-icons'; 
+        position: absolute; right: 12px; top: 50%; transform: translateY(-50%);
+        pointer-events: none; font-size: 1.1rem; color: var(--ds-gray-400);
+        transition: color 0.25s ease;
+      }
+      /* Expense variant */
+      .custom-styled-select.select-expense select { border-color: rgba(220,53,69,0.4); color: #dc3545; }
+      .custom-styled-select.select-expense select:focus { box-shadow: 0 0 0 3px rgba(220,53,69,0.12); }
+      .custom-styled-select.select-expense::after { color: #dc3545; }
+      /* Income variant */
+      .custom-styled-select.select-income select { border-color: rgba(16,185,129,0.4); color: #10b981; }
+      .custom-styled-select.select-income select:focus { box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
+      .custom-styled-select.select-income::after { color: #10b981; }
+      /* Kebutuhan variant */
+      .custom-styled-select.select-kebutuhan select { border-color: rgba(99,102,241,0.4); color: #6366f1; }
+      .custom-styled-select.select-kebutuhan select:focus { box-shadow: 0 0 0 3px rgba(99,102,241,0.12); }
+      .custom-styled-select.select-kebutuhan::after { color: #6366f1; }
+      /* Keinginan variant */
+      .custom-styled-select.select-keinginan select { border-color: rgba(245,158,11,0.4); color: #d97706; }
+      .custom-styled-select.select-keinginan select:focus { box-shadow: 0 0 0 3px rgba(245,158,11,0.12); }
+      .custom-styled-select.select-keinginan::after { color: #d97706; }
+
+      /* Hero Input */
       #amountDisplay:focus { outline: none; }
       #amountDisplay::placeholder { color: var(--ds-gray-400); }
       #amountDisplay { transition: color 0.3s ease; }
-      
-      /* Toggle Pills */
-      #typePills .nav-link { transition: all 0.2s ease; border-radius: 6px; }
-      #typePills .nav-link.active[data-type="pengeluaran"] { background-color: rgba(220,53,69,0.15); color: #dc3545 !important; }
-      #typePills .nav-link.active[data-type="pemasukan"] { background-color: rgba(16,185,129,0.15); color: #10b981 !important; }
-
-      /* Mobile Optimizations for Table */
       @media (max-width: 767.98px) {
-        /* Transaction Table to Card List */
-        #transactionsTable, #transactionsTable tr, #transactionsTable td, #transactionsTable tbody {
-          display: block; width: 100%;
-        }
-        .table-responsive .table { border: none; }
-        .table-responsive thead { display: none; }
-        #tableBody tr {
-          margin-bottom: 1rem; 
-          border: 1px solid var(--ds-border-color);
-          border-radius: 0.75rem; 
-          padding: 1rem;
-          background-color: var(--ds-card-bg);
-          position: relative;
-          box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-        }
-        #tableBody td { border: none; padding: 0.2rem 0; }
-        #tableBody td:nth-child(1) { /* Tanggal */
-          font-size: 0.85rem; color: var(--ds-gray-500); display: block; margin-bottom: 0.25rem; border-bottom: 1px solid var(--ds-border-color); padding-bottom: 0.5rem;
-        }
-        #tableBody td:nth-child(2) { /* Deskripsi */
-          font-size: 1.05rem; font-weight: 600; color: var(--ds-heading-color); max-width: 80%; display: block; margin-top: 0.5rem;
-        }
-        #tableBody td:nth-child(5) { /* Nominal */
-          font-size: 1.15rem; font-weight: bold; text-align: right; position: absolute; right: 1rem; top: 3.2rem;
-        }
-        #tableBody td:nth-child(3),
-        #tableBody td:nth-child(4) { /* Kategori, Tipe */
-          display: inline-block; margin-right: 0.5rem; font-size: 0.8rem; margin-top: 0.5rem;
-        }
-        #tableBody td:nth-child(6) { /* Aksi */
-          position: absolute; right: 1rem; top: 0.75rem; padding: 0; margin: 0;
-        }
-        #tableBody td:nth-child(6) button {
-          padding: 0.25rem 0.5rem; font-size: 0.8rem;
-        }
-        
-        .custom-container .row.mb-6 { margin-bottom: 1.5rem !important; }
+        #amountDisplay { font-size: 2.2rem !important; }
       }
+      @media (max-width: 374.98px) {
+        #amountDisplay { font-size: 1.8rem !important; }
+      }
+
+      /* Mobile Card Feed (shared with dashboard) */
+      .mobile-tx-feed { padding: 0 1rem 1rem; }
+      .mobile-tx-feed .feed-date-header {
+        font-size: 0.8rem; font-weight: 700; color: var(--ds-gray-500);
+        text-transform: uppercase; letter-spacing: 0.5px;
+        padding: 0.75rem 0 0.5rem; margin-top: 0.25rem;
+        border-bottom: 1px solid var(--ds-border-color);
+      }
+      .mobile-tx-feed .feed-item {
+        display: flex; align-items: flex-start; justify-content: space-between;
+        padding: 0.85rem 0; border-bottom: 1px solid var(--ds-border-color);
+        gap: 0.75rem; position: relative;
+      }
+      .mobile-tx-feed .feed-item:last-child { border-bottom: none; }
+      .mobile-tx-feed .feed-icon {
+        width: 38px; height: 38px; border-radius: 12px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 1.1rem; flex-shrink: 0;
+      }
+      .mobile-tx-feed .feed-icon.expense { background: rgba(220,53,69,0.1); color: #dc3545; }
+      .mobile-tx-feed .feed-icon.income { background: rgba(16,185,129,0.1); color: #10b981; }
+      .mobile-tx-feed .feed-icon.saving { background: rgba(99,102,241,0.1); color: #6366f1; }
+      .mobile-tx-feed .feed-info { flex: 1; min-width: 0; }
+      .mobile-tx-feed .feed-desc {
+        font-weight: 600; font-size: 0.95rem; color: var(--ds-heading-color);
+        white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+      }
+      .mobile-tx-feed .feed-meta {
+        font-size: 0.75rem; color: var(--ds-gray-500); margin-top: 2px;
+        display: flex; align-items: center; gap: 6px; flex-wrap: wrap;
+      }
+      .mobile-tx-feed .feed-meta .meta-badge {
+        padding: 1px 8px; border-radius: 99px; font-size: 0.7rem; font-weight: 600;
+      }
+      .mobile-tx-feed .feed-meta .meta-badge.expense { background: rgba(220,53,69,0.1); color: #dc3545; }
+      .mobile-tx-feed .feed-meta .meta-badge.income { background: rgba(16,185,129,0.1); color: #10b981; }
+      .mobile-tx-feed .feed-meta .meta-badge.keinginan { background: rgba(245,158,11,0.1); color: #d97706; }
+      .mobile-tx-feed .feed-amount {
+        font-weight: 700; font-size: 0.95rem; white-space: nowrap;
+        text-align: right; flex-shrink: 0;
+      }
+      .mobile-tx-feed .feed-amount.expense { color: var(--ds-heading-color); }
+      .mobile-tx-feed .feed-amount.income { color: #10b981; }
+      .mobile-tx-feed .feed-delete {
+        position: absolute; right: 0; bottom: 0.85rem;
+        background: none; border: none; color: var(--ds-gray-400);
+        font-size: 1rem; padding: 4px; cursor: pointer;
+        transition: color 0.15s ease;
+      }
+      .mobile-tx-feed .feed-delete:hover { color: #dc3545; }
     </style>
   </head>
 
@@ -1030,38 +1080,32 @@
                       <label for="amountDisplay" class="form-label text-muted fw-semibold mb-2">Nominal Uang</label>
                       <div class="position-relative d-flex justify-content-center align-items-center">
                         <span class="fs-2 fw-bold text-muted me-2">Rp</span>
-                        <input type="text" inputmode="numeric" class="form-control form-control-lg border-0 bg-transparent text-center fw-bold text-primary p-0" id="amountDisplay" placeholder="0" required style="font-size: 3.5rem; box-shadow: none; max-width: 250px;" autocomplete="off" />
+                        <input type="text" inputmode="numeric" class="form-control form-control-lg border-0 bg-transparent text-center fw-bold text-primary p-0" id="amountDisplay" placeholder="0" required style="font-size: 3rem; box-shadow: none; max-width: 250px;" autocomplete="off" />
                         <input type="hidden" id="amount" required />
                       </div>
                       <hr class="w-75 mx-auto mt-2 mb-0 border-primary opacity-25">
                     </div>
 
-                    <!-- Tipe Transaksi (Toggle) -->
+                    <!-- Tipe Transaksi (Modern Dropdown) -->
                     <div class="mb-4">
-                      <label class="form-label d-block text-muted">Tipe Transaksi</label>
-                      <ul class="nav nav-pills nav-fill bg-gray-100 rounded-3 p-1" id="typePills">
-                        <li class="nav-item">
-                          <button type="button" class="nav-link active py-2 px-3 fw-semibold text-danger" data-type="pengeluaran"><i class="ti ti-arrow-down-right me-1"></i> Pengeluaran</button>
-                        </li>
-                        <li class="nav-item">
-                          <button type="button" class="nav-link py-2 px-3 fw-semibold text-muted" data-type="pemasukan"><i class="ti ti-arrow-up-left me-1"></i> Pemasukan</button>
-                        </li>
-                      </ul>
-                      <input type="hidden" id="type" value="pengeluaran" />
+                      <label for="type" class="form-label text-muted fw-semibold">Tipe Transaksi</label>
+                      <div class="custom-styled-select select-expense" id="typeSelectWrapper">
+                        <select class="form-select" id="type" required>
+                          <option value="pengeluaran">🔻 Pengeluaran</option>
+                          <option value="pemasukan">🔺 Pemasukan</option>
+                        </select>
+                      </div>
                     </div>
 
-                    <!-- Nature Toggle: Kebutuhan / Keinginan (only for pengeluaran) -->
+                    <!-- Sifat Pengeluaran (Modern Dropdown) -->
                     <div class="mb-4" id="natureGroup">
-                      <label class="form-label d-block text-muted">Sifat Pengeluaran</label>
-                      <ul class="nav nav-pills nav-fill bg-gray-100 rounded-3 p-1" id="naturePills">
-                        <li class="nav-item">
-                          <button type="button" class="nav-link active py-1 px-3" data-nature="kebutuhan"><i class="ti ti-target me-1"></i> Kebutuhan</button>
-                        </li>
-                        <li class="nav-item">
-                          <button type="button" class="nav-link py-1 px-3" data-nature="keinginan"><i class="ti ti-shopping-cart me-1"></i> Keinginan</button>
-                        </li>
-                      </ul>
-                      <input type="hidden" id="nature" value="kebutuhan" />
+                      <label for="nature" class="form-label text-muted fw-semibold">Sifat Pengeluaran</label>
+                      <div class="custom-styled-select select-kebutuhan" id="natureSelectWrapper">
+                        <select class="form-select" id="nature" required>
+                          <option value="kebutuhan">🎯 Kebutuhan</option>
+                          <option value="keinginan">🛒 Keinginan</option>
+                        </select>
+                      </div>
                     </div>
 
                     <div class="row">
@@ -1108,7 +1152,7 @@
                 <div class="card-header border-bottom-0">
                   <h5 class="mb-0">Daftar Transaksi</h5>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive d-none d-md-block">
                   <table class="table text-nowrap mb-0 table-centered table-hover" id="transactionsTable">
                     <thead>
                       <tr>
@@ -1127,6 +1171,8 @@
                     </tbody>
                   </table>
                 </div>
+                <!-- Mobile Card Feed -->
+                <div id="txMobileFeed" class="mobile-tx-feed d-md-none"></div>
               </div>
             </div>
           </div>
