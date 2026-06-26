@@ -139,13 +139,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   btnNextWizard.addEventListener('click', async () => {
     // Validation
     if (currentStep === 1) {
-      if (!inputName.value.trim()) return alert('Nama target tidak boleh kosong!');
+      if (!inputName.value.trim()) return await CustomAlert.alert('Nama target tidak boleh kosong!');
     } else if (currentStep === 2) {
-      if (parseCurrency(inputAmount.value) <= 0) return alert('Total target harus lebih dari Rp 0!');
+      if (parseCurrency(inputAmount.value) <= 0) return await CustomAlert.alert('Total target harus lebih dari Rp 0!');
     } else if (currentStep === 3) {
-      if (!inputDate.value) return alert('Pilih tanggal target selesai!');
+      if (!inputDate.value) return await CustomAlert.alert('Pilih tanggal target selesai!');
       const selected = new Date(inputDate.value);
-      if (selected <= new Date()) return alert('Tanggal harus di masa depan!');
+      const today = new Date();
+      today.setHours(0,0,0,0);
+      selected.setHours(0,0,0,0);
+      if (isNaN(selected.getTime()) || selected < today) return await CustomAlert.alert('Tanggal tidak valid atau sudah lewat!');
       
       // Save Target
       await ApiService.addSavingTarget({
@@ -275,7 +278,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Save Transaction
   btnSaveTransaction.addEventListener('click', async () => {
     const amount = parseCurrency(detailActionAmount.value);
-    if (amount <= 0) return alert('Masukkan nominal yang valid!');
+    if (amount <= 0) return await CustomAlert.alert('Masukkan nominal yang valid!');
 
     await ApiService.addSavingTransaction({
       targetId: currentTargetId,
@@ -297,7 +300,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Delete Target
   btnDeleteTarget.addEventListener('click', async () => {
-    if (confirm('Yakin ingin menghapus target menabung ini? Uang yang sudah dicatat akan tetap ada di total tabungan global, tetapi target ini akan hilang.')) {
+    if ((await CustomAlert.confirm('Yakin ingin menghapus target menabung ini? Uang yang sudah dicatat akan tetap ada di total tabungan global, tetapi target ini akan hilang.'))) {
       await ApiService.deleteSavingTarget(currentTargetId);
       bsDetailModal.hide();
       await renderTargets();
