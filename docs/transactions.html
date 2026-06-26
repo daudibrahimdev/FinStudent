@@ -177,12 +177,22 @@
 
     <!-- Nav item Transaksi -->
     <li class="nav-item">
-      <a class="nav-link" href="./transactions.html">
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#navTransactions" aria-expanded="false" aria-controls="navTransactions">
         <span class="nav-icon">
           <i class="ti ti-receipt-2 fs-4"></i>
         </span> 
-        <span class="text">Catat Transaksi</span>
+        <span class="text">Transaksi</span>
       </a>
+      <div id="navTransactions" class="collapse" data-bs-parent="#miniSidebar">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="./transactions.html">Catat Transaksi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./transactions-history.html">Riwayat Transaksi</a>
+          </li>
+        </ul>
+      </div>
     </li>
 
     <!-- Nav item Savings -->
@@ -236,12 +246,22 @@
   
       <!-- Nav item Transaksi -->
       <li class="nav-item">
-        <a class="nav-link" href="./transactions.html">
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#navTransactionsMobile" aria-expanded="false" aria-controls="navTransactionsMobile">
           <span class="nav-icon">
             <i class="ti ti-receipt-2 fs-4"></i>
           </span> 
-          <span class="text">Catat Transaksi</span>
+          <span class="text">Transaksi</span>
         </a>
+        <div id="navTransactionsMobile" class="collapse" data-bs-parent=".offcanvas-body">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="./transactions.html">Catat Transaksi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./transactions-history.html">Riwayat Transaksi</a>
+            </li>
+          </ul>
+        </div>
       </li>
   
       <!-- Nav item Savings -->
@@ -1069,11 +1089,23 @@
               </div>
             </div>
           </div>
-          <div class="row">
-            <div class="col-xl-4 col-lg-5 col-12 mb-6">
+          <div class="row justify-content-center">
+            <div class="col-xl-6 col-lg-8 col-12 mb-6">
               <div class="card card-lg">
                 <div class="card-body p-6">
-                  <h5 class="mb-4">Tambah Entri Baru</h5>
+                  <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h5 class="mb-0">Tambah Entri Baru</h5>
+                    <!-- Dropdown Duplikat -->
+                    <div class="dropdown">
+                      <button class="btn btn-outline-secondary btn-sm dropdown-toggle rounded-pill" type="button" id="duplicateDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="ti ti-copy me-1"></i> Duplikat Transaksi
+                      </button>
+                      <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 p-0 overflow-hidden" aria-labelledby="duplicateDropdownBtn" id="duplicateDropdownMenu" style="width: 350px; max-width: 100vw; border-radius: 16px;">
+                        <li><span class="dropdown-item-text text-muted small p-3">Memuat...</span></li>
+                      </ul>
+                    </div>
+                  </div>
+                  
                   <form id="transactionForm" class="needs-validation" novalidate>
                     <!-- Nominal Hero Input -->
                     <div class="mb-5 text-center">
@@ -1140,39 +1172,16 @@
                       <textarea class="form-control bg-gray-100 border-0" id="description" rows="2" placeholder="Contoh: Belanja sembako mingguan"></textarea>
                     </div>
 
-                    <div class="d-grid">
+                    <div class="d-grid mb-3">
                       <button class="btn btn-primary btn-lg rounded-pill shadow-sm" type="submit" id="saveBtn"><i class="ti ti-check me-2"></i>Simpan Transaksi</button>
+                    </div>
+                    <div class="text-center">
+                      <a href="./transactions-history.html" class="text-decoration-none fw-semibold text-muted hover-primary">
+                        <i class="ti ti-arrow-right me-1"></i> Lihat Riwayat Transaksi Lengkap
+                      </a>
                     </div>
                   </form>
                 </div>
-              </div>
-            </div>
-            <div class="col-xl-8 col-lg-7 col-12">
-              <div class="card card-lg">
-                <div class="card-header border-bottom-0">
-                  <h5 class="mb-0">Daftar Transaksi</h5>
-                </div>
-                <div class="table-responsive d-none d-md-block">
-                  <table class="table text-nowrap mb-0 table-centered table-hover" id="transactionsTable">
-                    <thead>
-                      <tr>
-                        <th>Tanggal</th>
-                        <th>Deskripsi</th>
-                        <th>Kategori</th>
-                        <th>Tipe</th>
-                        <th>Nominal</th>
-                        <th>Aksi</th>
-                      </tr>
-                    </thead>
-                    <tbody id="tableBody">
-                      <tr>
-                        <td colspan="6" class="text-center text-muted">Memuat data...</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-                <!-- Mobile Card Feed -->
-                <div id="txMobileFeed" class="mobile-tx-feed d-md-none"></div>
               </div>
             </div>
           </div>

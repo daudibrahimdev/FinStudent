@@ -142,12 +142,22 @@
 
     <!-- Nav item Transaksi -->
     <li class="nav-item">
-      <a class="nav-link" href="./transactions.html">
+      <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#navTransactions" aria-expanded="false" aria-controls="navTransactions">
         <span class="nav-icon">
           <i class="ti ti-receipt-2 fs-4"></i>
         </span> 
-        <span class="text">Catat Transaksi</span>
+        <span class="text">Transaksi</span>
       </a>
+      <div id="navTransactions" class="collapse" data-bs-parent="#miniSidebar">
+        <ul class="nav flex-column">
+          <li class="nav-item">
+            <a class="nav-link" href="./transactions.html">Catat Transaksi</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="./transactions-history.html">Riwayat Transaksi</a>
+          </li>
+        </ul>
+      </div>
     </li>
 
     <!-- Nav item Savings -->
@@ -201,12 +211,22 @@
   
       <!-- Nav item Transaksi -->
       <li class="nav-item">
-        <a class="nav-link" href="./transactions.html">
+        <a class="nav-link collapsed" href="#" data-bs-toggle="collapse" data-bs-target="#navTransactionsMobile" aria-expanded="false" aria-controls="navTransactionsMobile">
           <span class="nav-icon">
             <i class="ti ti-receipt-2 fs-4"></i>
           </span> 
-          <span class="text">Catat Transaksi</span>
+          <span class="text">Transaksi</span>
         </a>
+        <div id="navTransactionsMobile" class="collapse" data-bs-parent=".offcanvas-body">
+          <ul class="nav flex-column">
+            <li class="nav-item">
+              <a class="nav-link" href="./transactions.html">Catat Transaksi</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="./transactions-history.html">Riwayat Transaksi</a>
+            </li>
+          </ul>
+        </div>
       </li>
   
       <!-- Nav item Savings -->

@@ -126,6 +126,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     const isSetupPage = currentPath.includes('setup.html');
     const isTransactionsPage = currentPath.includes('transactions.html');
+    const isTransactionsHistoryPage = currentPath.includes('transactions-history.html');
 
     if (!routerSetupData) {
       if (!isSetupPage) { window.location.href = 'setup.html'; return; }
@@ -135,7 +136,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         if (isTransactionsPage) {
           const alertBox = document.getElementById('onboardingAlert');
           if (alertBox) alertBox.style.display = 'block';
-        } else if (!isSetupPage) {
+        } else if (!isSetupPage && !isTransactionsHistoryPage) {
           window.location.href = 'transactions.html';
           return;
         }
@@ -246,10 +247,10 @@ document.addEventListener('DOMContentLoaded', async () => {
     // --- Helper: Toggle Nature visibility ---
     const toggleNatureVisibility = () => {
       if (typeInput.value === 'pengeluaran') {
-        natureGroup.style.display = 'block';
+        natureGroup.classList.remove('d-none');
       } else {
-        natureGroup.style.display = 'none';
-        amortGroup.style.display = 'none';
+        natureGroup.classList.add('d-none');
+        amortGroup.classList.add('d-none');
       }
       populateCategories();
     };
@@ -258,9 +259,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     const checkAmortization = () => {
       const selected = categorySelect.options[categorySelect.selectedIndex];
       if (selected && selected.dataset.periodic === 'true' && typeInput.value === 'pengeluaran') {
-        amortGroup.style.display = 'block';
+        amortGroup.classList.remove('d-none');
       } else {
-        amortGroup.style.display = 'none';
+        amortGroup.classList.add('d-none');
         amortDaysInput.value = 1;
       }
       updateAmortPreview();
@@ -318,85 +319,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     if (document.getElementById('date')) document.getElementById('date').valueAsDate = new Date();
     toggleNatureVisibility();
 
-        // --- Load & Render Transactions ---
-    const loadTransactions = async () => {
-      try {
-        const transactions = await ApiService.getTransactions();
-        tableBody.innerHTML = '';
-        if (transactions.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Belum ada transaksi.</td></tr>';
-          return;
-        }
-
-        let lastDateStr = null;
-
-        transactions.forEach(tx => {
-          const itemDateStr = formatDate(tx.date);
-          if (itemDateStr !== lastDateStr) {
-            const separatorTr = document.createElement('tr');
-            separatorTr.className = 'tr-separator d-md-none'; // Sembunyikan pemisah khusus mobile ini di desktop, atau tampilkan saja
-            separatorTr.innerHTML = `
-              <td colspan="6" class="bg-light fw-bold text-secondary py-2 border-bottom-0">
-                <i class="ti ti-calendar-event me-2"></i>${itemDateStr}
-              </td>
-            `;
-            tableBody.appendChild(separatorTr);
-            lastDateStr = itemDateStr;
-          }
-
-          const tr = document.createElement('tr');
-          let typeBadge, natureTag = '';
-          if (tx.type === 'pemasukan') {
-            typeBadge = '<span class="badge text-success-emphasis bg-success-subtle">Pemasukan</span>';
-          } else {
-            typeBadge = '<span class="badge text-danger-emphasis bg-danger-subtle">Pengeluaran</span>';
-            if (tx.nature === 'keinginan') {
-              natureTag = ' <span class="badge text-warning-emphasis bg-warning-subtle">Keinginan</span>';
-            }
-          }
-
-          const amortTag = tx.is_periodic && tx.amortization_days > 1
-            ? ` <span class="badge text-info-emphasis bg-info-subtle" title="Diamortisasi ${tx.amortization_days} hari">÷${tx.amortization_days}h</span>`
-            : '';
-
-          const amountColor = tx.type === 'pemasukan' ? 'text-success' : 'text-body';
-          const sign = tx.type === 'pemasukan' ? '+' : '-';
-
-          const iconClass = typeof FinCategories !== 'undefined' ? FinCategories.getIcon(tx.type === 'pengeluaran' ? tx.nature : 'pemasukan', tx.category) : 'ti-circle';
-          
-          tr.innerHTML = `
-            <td><span class="d-none d-md-inline">${formatDate(tx.date)}</span></td>
-            <td><strong>${tx.description || '-'}</strong></td>
-            <td><i class="ti ${iconClass} text-primary me-1"></i>${tx.category}${natureTag}${amortTag}</td>
-            <td>${typeBadge}</td>
-            <td class="${amountColor} fw-semibold">${sign}${formatRupiah(tx.amount)}</td>
-            <td><button class="btn btn-outline-danger btn-sm rounded-circle px-2 py-1 delete-btn" data-id="${tx.id}"><i class="ti ti-trash"></i></button></td>
-          `;
-          tableBody.appendChild(tr);
-        });
-
-        document.querySelectorAll('.delete-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            if (confirm('Hapus transaksi ini?')) {
-              await ApiService.deleteTransaction(e.target.dataset.id);
-              loadTransactions();
-            }
-          });
-        });
-
-        // Render mobile feed
-        renderMobileFeed('txMobileFeed', transactions, 'transaction', async (id) => {
-          if (confirm('Hapus transaksi ini?')) {
-            await ApiService.deleteTransaction(id);
-            loadTransactions();
-          }
-        });
-      } catch (err) {
-        console.error("Load transactions error:", err);
-        tableBody.innerHTML = '<tr><td colspan="6" class="text-center text-danger">Gagal memuat data.</td></tr>';
-      }
-    };
-
+    // loadTransactions was removed from here. The table and history logic are now in PAGE: TRANSACTIONS HISTORY
     // --- Form Submit ---
     transactionForm.addEventListener('submit', async (e) => {
       e.preventDefault();
@@ -430,17 +353,18 @@ document.addEventListener('DOMContentLoaded', async () => {
         amountHidden.value = '';
         transactionForm.classList.remove('was-validated');
         
-        // Reset dropdowns
+        // Reset inputs manually
         typeInput.value = 'pengeluaran';
         if (typeSelectWrapper) typeSelectWrapper.className = 'custom-styled-select select-expense';
         natureInput.value = 'kebutuhan';
         if (natureSelectWrapper) natureSelectWrapper.className = 'custom-styled-select select-kebutuhan';
         toggleNatureVisibility();
-        document.getElementById('date').valueAsDate = new Date();
+        if (document.getElementById('date')) document.getElementById('date').valueAsDate = new Date();
 
-        // Onboarding redirect
-        const allTxs = await ApiService.getTransactions();
-        if (allTxs.some(tx => tx.type === 'pengeluaran')) {
+        // Check onboarding completion
+        const allTx = await ApiService.getTransactions();
+        const hasExpense = allTx.some(tx => tx.type === 'pengeluaran');
+        if (hasExpense) {
           const alertBox = document.getElementById('onboardingAlert');
           if (alertBox && alertBox.style.display === 'block') {
             alert('Mantap! Dashboard kamu sekarang sudah aktif. Yuk lihat!');
@@ -449,51 +373,53 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }
         
-        // Character Alert Logic (50/30/20 Rule)
+        loadDuplicateDropdown();
+
+        // Advanced character alert check...
         if (transaction.nature === 'keinginan') {
           const setup = await ApiService.getSetupData();
-          let totalPendapatanBulanIni = parseFloat(setup.balance) || 0;
-          let totalKeinginanBulanIni = 0;
-          
-          const today = new Date();
-          const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1).getTime();
-          
-          allTxs.forEach(t => {
-            const tDate = new Date(t.date).getTime();
-            if (tDate >= firstDayOfMonth) {
-              const amt = parseFloat(t.amount) || 0;
-              if (t.type === 'pemasukan') totalPendapatanBulanIni += amt;
-              if (t.type === 'pengeluaran' && t.nature === 'keinginan') totalKeinginanBulanIni += amt;
+          let balance = parseFloat(setup.balance) || 0;
+          let totalKeinginanThisMonth = 0;
+          const now = new Date();
+          const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+
+          allTx.forEach(tx => {
+            if (new Date(tx.date).getTime() >= startOfMonth) {
+              const amt = parseFloat(tx.amount) || 0;
+              if (tx.type === 'pemasukan') balance += amt;
+              if (tx.type === 'pengeluaran' && tx.nature === 'keinginan') {
+                totalKeinginanThisMonth += amt;
+              }
             }
           });
-          
-          if (totalPendapatanBulanIni > 0) {
-            const percentage = (totalKeinginanBulanIni / totalPendapatanBulanIni) * 100;
+
+          if (balance > 0) {
+            const percentage = (totalKeinginanThisMonth / balance) * 100;
             const alertBox = document.getElementById('characterAlert');
             const alertImg = document.getElementById('characterAlertImg');
             const alertText = document.getElementById('characterAlertText');
-            
+
             if (alertBox && alertImg && alertText) {
-              let show = false;
+              let trigger = false;
               if (percentage > 50) {
                 alertImg.src = 'assets/images/cat/passed_out.gif';
-                alertText.textContent = 'Ya sudah, aku menyerah.';
-                show = true;
+                alertText.textContent = "Ya sudah, aku menyerah.";
+                trigger = true;
               } else if (percentage > 40) {
                 alertImg.src = 'assets/images/cat/sad.gif';
-                alertText.textContent = 'Oh.. kamu mengabaikan rencana kita lagi?';
-                show = true;
+                alertText.textContent = "Oh.. kamu mengabaikan rencana kita lagi?";
+                trigger = true;
               } else if (percentage > 30) {
                 alertImg.src = 'assets/images/cat/angry.gif';
-                alertText.textContent = 'Masih mau jajan lagi? Rrrawwww!';
-                show = true;
+                alertText.textContent = "Masih mau jajan lagi? Rrrawwww!";
+                trigger = true;
               } else if (percentage > 25) {
                 alertImg.src = 'assets/images/cat/confused.gif';
-                alertText.textContent = 'hmm, kamu jajan terus ya.. hmm';
-                show = true;
+                alertText.textContent = "hmm, kamu jajan terus ya.. hmm";
+                trigger = true;
               }
-              
-              if (show) {
+
+              if (trigger) {
                 alertBox.style.display = 'block';
                 setTimeout(() => { alertBox.style.display = 'none'; }, 5000);
               }
@@ -501,7 +427,6 @@ document.addEventListener('DOMContentLoaded', async () => {
           }
         }
 
-        loadTransactions();
       } catch (err) {
         console.error("Save transaction error:", err);
         alert('Gagal menyimpan transaksi');
@@ -511,8 +436,332 @@ document.addEventListener('DOMContentLoaded', async () => {
       }
     });
 
-    loadTransactions();
+    // --- Duplicate Dropdown Feature ---
+    const duplicateDropdownMenu = document.getElementById('duplicateDropdownMenu');
+    const loadDuplicateDropdown = async () => {
+      if (!duplicateDropdownMenu) return;
+      try {
+        const transactions = await ApiService.getTransactions();
+        if (transactions.length === 0) {
+          duplicateDropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-muted small">Belum ada transaksi</span></li>';
+          return;
+        }
+        
+        duplicateDropdownMenu.innerHTML = '';
+        const header = document.createElement('li');
+        header.innerHTML = '<div class="dropdown-header text-uppercase fw-bold text-muted bg-light border-bottom" style="letter-spacing: 0.5px; font-size: 0.75rem; padding: 0.5rem 1rem;">5 Transaksi Terakhir</div>';
+        duplicateDropdownMenu.appendChild(header);
+
+        const recentTx = transactions.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id).slice(0, 5);
+        
+        recentTx.forEach((tx, index) => {
+          const li = document.createElement('li');
+          const a = document.createElement('a');
+          const iconClass = typeof FinCategories !== 'undefined' ? FinCategories.getIcon(tx.type === 'pengeluaran' ? tx.nature : 'pemasukan', tx.category) : 'ti-circle';
+          const typeColor = tx.type === 'pemasukan' ? 'success' : 'danger';
+          const sign = tx.type === 'pemasukan' ? '+' : '-';
+          
+          a.className = 'dropdown-item px-3 py-3 d-flex align-items-center gap-3 transition-all' + (index !== recentTx.length - 1 ? ' border-bottom' : '');
+          a.href = '#';
+          a.style.whiteSpace = 'normal';
+          
+          a.innerHTML = `
+            <div class="bg-${typeColor}-subtle text-${typeColor} rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">
+              <i class="ti ${iconClass} fs-4"></i>
+            </div>
+            <div class="flex-grow-1 overflow-hidden">
+              <h6 class="mb-0 text-truncate text-dark fw-bold" style="font-size: 0.95rem;">${tx.description || tx.category}</h6>
+              <div class="text-muted small d-flex align-items-center gap-1 mt-1">
+                <span class="badge bg-${typeColor}-subtle text-${typeColor} rounded-pill px-2 py-0" style="font-size: 0.65rem;">${tx.type === 'pemasukan' ? 'Masuk' : 'Keluar'}</span>
+                <span class="text-truncate" style="max-width: 120px;">• ${tx.category}</span>
+              </div>
+            </div>
+            <div class="text-end flex-shrink-0">
+              <div class="fw-bold text-${typeColor}" style="font-size: 0.95rem;">${sign}${formatRupiah(tx.amount)}</div>
+              <div class="text-muted small mt-1" style="font-size: 0.7rem;">${formatDate(tx.date)}</div>
+            </div>
+          `;
+          a.addEventListener('click', (e) => {
+            e.preventDefault();
+            // Fill form
+            amountHidden.value = tx.amount;
+            amountDisplay.value = formatRupiah(tx.amount).replace('Rp', '').trim();
+            typeInput.value = tx.type;
+            if (typeSelectWrapper) typeSelectWrapper.className = 'custom-styled-select ' + (tx.type === 'pengeluaran' ? 'select-expense' : 'select-income');
+            
+            if (tx.type === 'pengeluaran' && tx.nature) {
+              natureInput.value = tx.nature;
+              if (natureSelectWrapper) natureSelectWrapper.className = 'custom-styled-select ' + (tx.nature === 'kebutuhan' ? 'select-kebutuhan' : 'select-keinginan');
+            }
+            toggleNatureVisibility();
+            
+            // Set category
+            categorySelect.value = tx.category;
+            checkAmortization();
+            
+            if (tx.is_periodic && tx.amortization_days > 1) {
+               amortDaysInput.value = tx.amortization_days;
+               updateAmortPreview();
+            }
+            
+            document.getElementById('description').value = tx.description || '';
+          });
+          li.appendChild(a);
+          duplicateDropdownMenu.appendChild(li);
+        });
+      } catch (err) {
+         duplicateDropdownMenu.innerHTML = '<li><span class="dropdown-item-text text-danger small">Gagal memuat</span></li>';
+      }
+    };
+    
+    loadDuplicateDropdown();
   }
+
+  // ==========================================
+  // PAGE: TRANSACTIONS HISTORY (New)
+  // ==========================================
+  const historyTableBody = document.getElementById('historyTableBody');
+  if (historyTableBody) {
+    const filterForm = document.getElementById('filterForm');
+    const filterStartDate = document.getElementById('filterStartDate');
+    const filterEndDate = document.getElementById('filterEndDate');
+    const filterType = document.getElementById('filterType');
+    const filterNature = document.getElementById('filterNature');
+    const filterCategory = document.getElementById('filterCategory');
+    const resetFilterBtn = document.getElementById('resetFilterBtn');
+    const paginationControls = document.getElementById('paginationControls');
+    const paginationInfo = document.getElementById('paginationInfo');
+    const totalResultsBadge = document.getElementById('totalResultsBadge');
+    
+    let allTransactions = [];
+    let filteredTransactions = [];
+    let currentPage = 1;
+    const itemsPerPage = 10;
+
+    // Load initial categories
+    const loadFilterCategories = () => {
+      const type = filterType.value;
+      const nature = filterNature.value;
+      let options = [];
+
+      if (type === 'pemasukan') {
+        options = FinCategories.pemasukan;
+      } else if (type === 'pengeluaran') {
+        if (nature === 'all') {
+          options = [...FinCategories.kebutuhan, ...FinCategories.keinginan];
+        } else {
+          options = FinCategories[nature] || [];
+        }
+      } else {
+        // all types
+        options = [...FinCategories.pemasukan, ...FinCategories.kebutuhan, ...FinCategories.keinginan];
+      }
+
+      // Remove duplicates just in case
+      const uniqueOptions = Array.from(new Set(options.map(a => a.value)))
+        .map(value => {
+          return options.find(a => a.value === value)
+        });
+
+      filterCategory.innerHTML = '<option value="all">Semua Kategori</option>';
+      uniqueOptions.forEach(opt => {
+        const el = document.createElement('option');
+        el.value = opt.value;
+        el.textContent = opt.label;
+        filterCategory.appendChild(el);
+      });
+    };
+
+    const filterNatureGroup = document.getElementById('filterNatureGroup');
+    filterType.addEventListener('change', () => {
+      if (filterType.value === 'pengeluaran') {
+        filterNature.disabled = false;
+        if (filterNatureGroup) filterNatureGroup.style.display = 'block';
+      } else {
+        filterNature.disabled = true;
+        filterNature.value = 'all';
+        if (filterNatureGroup) filterNatureGroup.style.display = 'none';
+      }
+      loadFilterCategories();
+    });
+
+    filterNature.addEventListener('change', loadFilterCategories);
+
+    // Apply Filter Logic
+    const applyFilters = () => {
+      const startDate = filterStartDate.value ? new Date(filterStartDate.value).getTime() : null;
+      let endDate = filterEndDate.value ? new Date(filterEndDate.value) : null;
+      if (endDate) {
+         endDate.setHours(23, 59, 59, 999);
+         endDate = endDate.getTime();
+      }
+      const type = filterType.value;
+      const nature = filterNature.value;
+      const category = filterCategory.value;
+
+      filteredTransactions = allTransactions.filter(tx => {
+        const txDate = new Date(tx.date).getTime();
+        
+        // Date range
+        if (startDate && txDate < startDate) return false;
+        if (endDate && txDate > endDate) return false;
+        
+        // Type
+        if (type !== 'all' && tx.type !== type) return false;
+        
+        // Nature (only applies to pengeluaran)
+        if (tx.type === 'pengeluaran' && nature !== 'all' && tx.nature !== nature) return false;
+        
+        // Category
+        if (category !== 'all' && tx.category !== category) return false;
+        
+        return true;
+      });
+
+      // Sort by date desc
+      filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date) || b.id - a.id);
+      
+      currentPage = 1;
+      renderHistory();
+    };
+
+    const renderHistory = () => {
+      const totalItems = filteredTransactions.length;
+      totalResultsBadge.textContent = totalItems + ' Transaksi';
+      
+      if (totalItems === 0) {
+        historyTableBody.innerHTML = '<tr><td colspan="6" class="text-center text-muted py-4">Tidak ada transaksi yang cocok dengan filter.</td></tr>';
+        document.getElementById('historyMobileFeed').innerHTML = '<div class="text-center text-muted py-4">Belum ada data.</div>';
+        paginationInfo.textContent = 'Menampilkan 0 dari 0 transaksi';
+        paginationControls.innerHTML = '';
+        return;
+      }
+
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+      if (currentPage < 1) currentPage = 1;
+      if (currentPage > totalPages) currentPage = totalPages;
+
+      const startIndex = (currentPage - 1) * itemsPerPage;
+      const endIndex = Math.min(startIndex + itemsPerPage, totalItems);
+      const currentItems = filteredTransactions.slice(startIndex, endIndex);
+
+      paginationInfo.textContent = `Menampilkan ${startIndex + 1} - ${endIndex} dari ${totalItems} transaksi`;
+
+      // Render Desktop Table
+      historyTableBody.innerHTML = '';
+      currentItems.forEach(tx => {
+        const tr = document.createElement('tr');
+        let typeBadge, natureTag = '';
+        if (tx.type === 'pemasukan') {
+          typeBadge = '<span class="badge text-success-emphasis bg-success-subtle">Pemasukan</span>';
+        } else {
+          typeBadge = '<span class="badge text-danger-emphasis bg-danger-subtle">Pengeluaran</span>';
+          if (tx.nature === 'keinginan') {
+            natureTag = ' <span class="badge text-warning-emphasis bg-warning-subtle">Keinginan</span>';
+          }
+        }
+
+        const amortTag = tx.is_periodic && tx.amortization_days > 1
+          ? ` <span class="badge text-info-emphasis bg-info-subtle" title="Diamortisasi ${tx.amortization_days} hari">÷${tx.amortization_days}h</span>`
+          : '';
+
+        const amountColor = tx.type === 'pemasukan' ? 'text-success' : 'text-body';
+        const sign = tx.type === 'pemasukan' ? '+' : '-';
+        const iconClass = typeof FinCategories !== 'undefined' ? FinCategories.getIcon(tx.type === 'pengeluaran' ? tx.nature : 'pemasukan', tx.category) : 'ti-circle';
+        
+        tr.innerHTML = `
+          <td><span class="d-none d-md-inline">${formatDate(tx.date)}</span></td>
+          <td><strong>${tx.description || '-'}</strong></td>
+          <td><i class="ti ${iconClass} text-primary me-1"></i>${tx.category}${natureTag}${amortTag}</td>
+          <td>${typeBadge}</td>
+          <td class="${amountColor} fw-semibold">${sign}${formatRupiah(tx.amount)}</td>
+          <td><button class="btn btn-outline-danger btn-sm rounded-circle px-2 py-1 history-delete-btn" data-id="${tx.id}"><i class="ti ti-trash"></i></button></td>
+        `;
+        historyTableBody.appendChild(tr);
+      });
+
+      document.querySelectorAll('.history-delete-btn').forEach(btn => {
+        btn.addEventListener('click', async (e) => {
+          if (confirm('Hapus transaksi ini?')) {
+            await ApiService.deleteTransaction(e.target.dataset.id);
+            loadAllHistory();
+          }
+        });
+      });
+
+      // Render Mobile Feed
+      renderMobileFeed('historyMobileFeed', currentItems, 'transaction', async (id) => {
+        if (confirm('Hapus transaksi ini?')) {
+          await ApiService.deleteTransaction(id);
+          loadAllHistory();
+        }
+      });
+
+      // Render Pagination Controls
+      renderPagination(totalPages);
+    };
+
+    const renderPagination = (totalPages) => {
+      paginationControls.innerHTML = '';
+      if (totalPages <= 1) return;
+
+      // Prev
+      const prevLi = document.createElement('li');
+      prevLi.className = 'page-item ' + (currentPage === 1 ? 'disabled' : '');
+      prevLi.innerHTML = '<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>';
+      if (currentPage > 1) {
+        prevLi.addEventListener('click', (e) => { e.preventDefault(); currentPage--; renderHistory(); });
+      }
+      paginationControls.appendChild(prevLi);
+
+      // Pages
+      for (let i = 1; i <= totalPages; i++) {
+        const li = document.createElement('li');
+        li.className = 'page-item ' + (i === currentPage ? 'active' : '');
+        li.innerHTML = `<a class="page-link" href="#">${i}</a>`;
+        if (i !== currentPage) {
+           li.addEventListener('click', (e) => { e.preventDefault(); currentPage = i; renderHistory(); });
+        }
+        paginationControls.appendChild(li);
+      }
+
+      // Next
+      const nextLi = document.createElement('li');
+      nextLi.className = 'page-item ' + (currentPage === totalPages ? 'disabled' : '');
+      nextLi.innerHTML = '<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>';
+      if (currentPage < totalPages) {
+        nextLi.addEventListener('click', (e) => { e.preventDefault(); currentPage++; renderHistory(); });
+      }
+      paginationControls.appendChild(nextLi);
+    };
+
+    const loadAllHistory = async () => {
+      try {
+        allTransactions = await ApiService.getTransactions();
+        applyFilters();
+      } catch (err) {
+        console.error("Load history error:", err);
+      }
+    };
+
+    if (filterForm) {
+      filterForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        applyFilters();
+      });
+
+      resetFilterBtn.addEventListener('click', () => {
+        filterForm.reset();
+        filterNature.disabled = true;
+        const filterNatureGrp = document.getElementById('filterNatureGroup');
+        if (filterNatureGrp) filterNatureGrp.style.display = 'none';
+        loadFilterCategories();
+        applyFilters();
+      });
+    }
+
+    loadFilterCategories();
+    loadAllHistory();  }
 
   // ==========================================
   // PAGE: SAVINGS (LEDGER)
