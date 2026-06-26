@@ -6,7 +6,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <meta content="Codescandy" name="author">
-  <title>Target Menabung | FinStudent</title>
+  <title>Rajin Menabung | FinStudent</title>
   <!-- Favicon icon-->
 <link rel="apple-touch-icon" sizes="57x57" href="./assets/images/favicon/apple-icon-57x57.png" />
 <link rel="apple-touch-icon" sizes="60x60" href="./assets/images/favicon/apple-icon-60x60.png" />
@@ -166,7 +166,7 @@
         <span class="nav-icon">
           <i class="ti ti-pig-money fs-4"></i>
         </span> 
-        <span class="text">Target Menabung</span>
+        <span class="text">Rajin Menabung</span>
       </a>
     </li>
 
@@ -235,7 +235,7 @@
           <span class="nav-icon">
             <i class="ti ti-pig-money fs-4"></i>
           </span> 
-          <span class="text">Target Menabung</span>
+          <span class="text">Rajin Menabung</span>
         </a>
       </li>
   
@@ -1033,117 +1033,216 @@
     </div>
   </div>
 </div>
+      
       <div class="custom-container">
-        <div class="row mb-6">
-          <div class="col-lg-12 col-md-12 col-12">
-            <!-- Page header -->
-            <div class="mb-5">
-              <h1 class="mb-3 h2">Target Menabung</h1>
-              <p>Kumpulkan uang untuk target masa depanmu. Uang yang ditabung akan dipisahkan dari saldo aktif harianmu.
-              </p>
+        <!-- Header -->
+        <div class="row mb-6 g-6">
+          <div class="col-12">
+            <div class="bg-primary p-6 p-md-8 rounded-4 position-relative overflow-hidden shadow">
+              <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-4" style="z-index: 2; position: relative;">
+                <div>
+                  <h1 class="text-white mb-1">Rajin Menabung</h1>
+                  <p class="text-white-50 mb-0">Nabung dikit-dikit, lama-lama jadi bukit! Buat target dan wujudkan mimpimu.</p>
+                </div>
+                <button type="button" class="btn btn-light btn-lg rounded-pill shadow-sm text-dark fw-bold px-4 hover-lift" data-bs-toggle="modal" data-bs-target="#wizardModal">
+                  <i class="ti ti-plus me-2"></i>Buat Target Baru
+                </button>
+              </div>
+              <div class="position-absolute end-0 bottom-0 opacity-25" style="transform: translate(10%, 20%); z-index: 1; pointer-events: none;">
+                <i class="ti ti-pig-money" style="font-size: 15rem;"></i>
+              </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col-xl-4 col-lg-5 col-12 mb-6">
-            <div class="card card-lg">
-              <div class="card-body p-6">
-                <h5 class="mb-4">Catat Tabungan</h5>
-                <form id="savingsForm" class="needs-validation" novalidate>
-                  <!-- Nominal Hero Input -->
-                  <div class="mb-5 text-center">
-                    <label for="savingAmountDisplay" class="form-label text-muted fw-semibold mb-2">Nominal Tabungan</label>
-                    <div class="position-relative d-flex justify-content-center align-items-center">
-                      <span class="fs-2 fw-bold text-muted me-2">Rp</span>
-                      <input type="text" inputmode="numeric" class="form-control form-control-lg border-0 bg-transparent text-center fw-bold text-success p-0" id="savingAmountDisplay" placeholder="0" required style="font-size: 3rem; box-shadow: none; max-width: 250px;" autocomplete="off" />
-                      <input type="hidden" id="saving_amount" required />
-                    </div>
-                    <hr class="w-75 mx-auto mt-2 mb-0 border-success opacity-25">
-                  </div>
 
-                  <!-- Tipe Tabungan (Toggle) -->
-                  <div class="mb-4">
-                    <label class="form-label d-block text-muted">Aksi Tabungan</label>
-                    <ul class="nav nav-pills nav-fill bg-gray-100 rounded-3 p-1" id="savingTypePills">
-                      <li class="nav-item">
-                        <button type="button" class="nav-link active py-2 px-3 fw-semibold text-success" data-type="simpan" style="background-color: rgba(16,185,129,0.15);"><i class="ti ti-pig-money me-1"></i> Nabung</button>
-                      </li>
-                      <li class="nav-item">
-                        <button type="button" class="nav-link py-2 px-3 fw-semibold text-muted" data-type="tarik"><i class="ti ti-hand-grab me-1"></i> Tarik</button>
-                      </li>
-                    </ul>
-                    <input type="hidden" id="saving_type" value="simpan" />
-                  </div>
+        <!-- Target Cards Container -->
+        <div class="row g-4" id="targetCardsContainer">
+          <!-- Digenerate oleh app.js -->
+        </div>
 
-                  <!-- Tanggal -->
-                  <div class="mb-4">
-                    <label for="saving_date" class="form-label text-muted">Tanggal</label>
-                    <input type="date" class="form-control" id="saving_date" required />
-                  </div>
+        <!-- Empty State (Hidden by default) -->
+        <div id="emptyStateContainer" class="text-center py-10 d-none">
+          <img src="./assets/images/mochi1.gif" alt="Empty" style="max-width: 200px; opacity: 0.8;" class="mb-4">
+          <h4 class="text-muted mb-2">Belum ada target menabung</h4>
+          <p class="text-muted-50 mb-4">Yuk, mulai rajin menabung untuk masa depanmu!</p>
+          <button type="button" class="btn btn-primary rounded-pill px-5 shadow-sm" data-bs-toggle="modal" data-bs-target="#wizardModal">Buat Target Pertamamu</button>
+        </div>
+        
+      </div>
+    </div>
+  </div>
 
-                  <!-- Deskripsi -->
-                  <div class="mb-5">
-                    <label for="saving_desc" class="form-label text-muted">Deskripsi (Opsional)</label>
-                    <input type="text" class="form-control bg-gray-100 border-0" id="saving_desc"
-                      placeholder="Contoh: Nabung sisa uang jajan" />
-                  </div>
+  <!-- Wizard Modal (Multi-step) -->
+  <div class="modal fade" id="wizardModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+        
+        <!-- Progress Indicator -->
+        <div class="bg-light p-3 border-bottom d-flex justify-content-center gap-2" id="wizardProgress">
+          <div class="progress-dot active"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+          <div class="progress-dot"></div>
+        </div>
 
-                  <div class="d-grid">
-                    <button class="btn btn-primary btn-lg rounded-pill shadow-sm" type="submit" id="saveBtn"><i class="ti ti-check me-2"></i>Simpan Transaksi</button>
-                  </div>
-                </form>
-              </div>
+        <div class="modal-body p-0 position-relative" style="min-height: 400px; display: flex; flex-direction: column;">
+          
+          <!-- Step 1 -->
+          <div class="wizard-step active p-5 p-md-8 text-center d-flex flex-column justify-content-center flex-grow-1" id="step1">
+            <div class="mb-4"><img src="./assets/images/mochi1.gif" alt="Mochi" style="height: 180px; object-fit: contain;"></div>
+            <h3 class="mb-4">Apa nama target kamu?</h3>
+            <div class="form-floating mb-4 mx-auto w-100" style="max-width: 400px;">
+              <input type="text" class="form-control form-control-lg rounded-pill px-4 text-center fw-bold fs-4" id="targetName" placeholder="Contoh: Beli Laptop Baru" style="height: 70px;">
+              <label for="targetName" class="text-center w-100" style="left: 0;">Nama Target</label>
             </div>
           </div>
-          <div class="col-xl-8 col-lg-7 col-12">
-            <div class="card card-lg">
-              <div class="card-header border-bottom-0">
-                <h5 class="mb-0">Riwayat Tabungan</h5>
+
+          <!-- Step 2 -->
+          <div class="wizard-step d-none p-5 p-md-8 text-center d-flex flex-column justify-content-center flex-grow-1" id="step2">
+            <div class="mb-4"><img src="./assets/images/mochi1.gif" alt="Mochi" style="height: 180px; object-fit: contain;"></div>
+            <h3 class="mb-4">Berapa total uang yang ingin kamu kumpulkan?</h3>
+            <div class="form-floating mb-4 mx-auto w-100" style="max-width: 400px;">
+              <input type="text" inputmode="numeric" class="form-control form-control-lg rounded-pill px-4 text-center fw-bold text-primary" id="targetAmount" placeholder="Rp 0" style="height: 70px; font-size: 2rem;">
+              <label for="targetAmount" class="text-center w-100" style="left: 0;">Total Target (Rp)</label>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="wizard-step d-none p-5 p-md-8 text-center d-flex flex-column justify-content-center flex-grow-1" id="step3">
+            <div class="mb-4"><img src="./assets/images/mochi1.gif" alt="Mochi" style="height: 180px; object-fit: contain;"></div>
+            <h3 class="mb-4">Target ini harus selesai kapan?</h3>
+            <div class="form-floating mb-4 mx-auto w-100" style="max-width: 400px;">
+              <input type="date" class="form-control form-control-lg rounded-pill px-4 text-center fw-bold fs-4" id="targetDate" style="height: 70px;">
+              <label for="targetDate" class="text-center w-100" style="left: 0;">Tanggal Selesai</label>
+            </div>
+          </div>
+
+          <!-- Step 4 (Success) -->
+          <div class="wizard-step d-none p-5 p-md-8 text-center d-flex flex-column justify-content-center flex-grow-1" id="step4">
+            <div class="mb-4"><img src="./assets/images/mochihappy.gif" alt="Mochi Happy" style="height: 200px; object-fit: contain;"></div>
+            <h2 class="mb-2 text-success fw-bolder">YAY!</h2>
+            <h4 class="mb-4">Target menabung kamu sudah dibuat!</h4>
+            <p class="text-muted mb-0 fs-5">Nabung dikit-dikit, lama-lama jadi bukit ⛰️</p>
+          </div>
+
+        </div>
+
+        <!-- Wizard Footer -->
+        <div class="modal-footer border-0 p-4 pt-0 d-flex justify-content-between align-items-center" id="wizardFooter">
+          <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold" id="btnPrevWizard" data-bs-dismiss="modal">Batal</button>
+          <button type="button" class="btn btn-primary rounded-pill px-5 shadow-sm fw-bold" id="btnNextWizard">Lanjut <i class="ti ti-arrow-right ms-2"></i></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Target Detail Modal -->
+  <div class="modal fade" id="targetDetailModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content rounded-4 border-0 overflow-hidden shadow-lg">
+        <div class="modal-header border-0 bg-primary text-white p-4">
+          <div>
+            <h4 class="modal-title text-white mb-1 fw-bold" id="detailTargetName">Nama Target</h4>
+            <p class="mb-0 text-white-50 small" id="detailTargetDate">Deadline: -</p>
+          </div>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body p-4 p-md-5 bg-light">
+          <div class="row g-4">
+            <div class="col-md-5">
+              <div class="card bg-white border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body text-center d-flex flex-column justify-content-center py-5">
+                  <div class="fs-1 fw-bold text-primary mb-1" id="detailCurrentAmount">Rp 0</div>
+                  <div class="text-muted small mb-4">Terkumpul dari <span id="detailTotalAmount" class="fw-semibold">Rp 0</span></div>
+                  
+                  <div class="progress mb-2" style="height: 16px; border-radius: 12px; background-color: var(--ds-gray-200);">
+                    <div class="progress-bar bg-primary progress-bar-striped progress-bar-animated" id="detailProgressBar" role="progressbar" style="width: 0%"></div>
+                  </div>
+                  <div class="d-flex justify-content-between text-muted small fw-bold">
+                    <span>0%</span>
+                    <span id="detailProgressText">0%</span>
+                  </div>
+                  <div class="mt-4 pt-4 border-top">
+                    <button type="button" class="btn btn-outline-danger btn-sm rounded-pill w-100" id="btnDeleteTarget">
+                      <i class="ti ti-trash me-2"></i>Hapus Target
+                    </button>
+                  </div>
+                </div>
               </div>
-              <div class="table-responsive d-none d-md-block">
-                <table class="table text-nowrap mb-0 table-centered table-hover" id="savingsTable">
-                  <thead>
-                    <tr>
-                      <th>Tanggal</th>
-                      <th>Tipe</th>
-                      <th>Deskripsi</th>
-                      <th>Nominal</th>
-                      <th>Aksi</th>
-                    </tr>
-                  </thead>
-                  <tbody id="savingsTableBody">
-                    <tr>
-                      <td colspan="5" class="text-center text-muted">Memuat data...</td>
-                    </tr>
-                  </tbody>
-                </table>
+            </div>
+            <div class="col-md-7">
+              <div class="card border-0 shadow-sm h-100 rounded-4">
+                <div class="card-body p-4">
+                  <h5 class="mb-4 fw-bold">Tambah / Tarik Dana</h5>
+                  <ul class="nav nav-pills nav-fill mb-4 bg-light p-1 rounded-pill" id="detailActionPills" role="tablist">
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link active rounded-pill fw-semibold" id="tab-simpan" data-bs-toggle="pill" data-type="simpan" type="button" role="tab">Simpan</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                      <button class="nav-link rounded-pill fw-semibold text-danger" id="tab-tarik" data-bs-toggle="pill" data-type="tarik" type="button" role="tab">Tarik</button>
+                    </li>
+                  </ul>
+                  <div class="form-floating mb-3">
+                    <input type="text" inputmode="numeric" class="form-control form-control-lg rounded-3 fw-bold fs-4 text-center" id="detailActionAmount" placeholder="Rp 0">
+                    <label for="detailActionAmount" class="text-center w-100" style="left:0">Nominal (Rp)</label>
+                  </div>
+                  <button type="button" class="btn btn-primary w-100 rounded-pill py-3 fw-bold fs-5 shadow-sm" id="btnSaveTransaction">Konfirmasi</button>
+                  
+                  <hr class="my-4">
+                  <h6 class="fw-bold mb-3">Riwayat Transaksi Target</h6>
+                  <div id="targetTransactionHistory" class="mobile-tx-feed p-0" style="max-height: 200px; overflow-y: auto;">
+                    <!-- Diisi js -->
+                    <div class="text-center text-muted small py-3">Belum ada transaksi</div>
+                  </div>
+                </div>
               </div>
-              <!-- Mobile Card Feed -->
-              <div id="savingsMobileFeed" class="mobile-tx-feed d-md-none"></div>
             </div>
           </div>
         </div>
       </div>
     </div>
-
-  </div>
   </div>
 
-  <!-- Custom Toast Alert for Savings -->
-  <div id="catToast" class="position-fixed bottom-0 end-0 p-4" style="z-index: 1050; display: none;">
-    <div class="toast show align-items-center border-0 shadow-lg" role="alert" aria-live="assertive"
-      aria-atomic="true" style="border-radius: 16px; max-width: 400px;">
-      <div class="d-flex p-3">
-        <img src="./assets/images/cat/thumbs_up.gif" alt="Cat Thumbs Up"
-          style="width: 80px; height: 80px; object-fit: cover; border-radius: 10px;" class="me-3">
-        <div class="toast-body fw-bold d-flex align-items-center" style="font-size: 18px;">
-          Nabung dikit-dikit lama-lama jadi bukit
-        </div>
-        <button type="button" class="btn-close me-2 m-auto"
-          onclick="document.getElementById('catToast').style.display='none';" aria-label="Close"></button>
-      </div>
-    </div>
-  </div>
+  <style>
+    .progress-dot {
+      width: 10px; height: 10px; border-radius: 50%;
+      background-color: var(--ds-gray-300);
+      transition: all 0.3s ease;
+    }
+    .progress-dot.active {
+      background-color: var(--ds-primary);
+      transform: scale(1.3);
+    }
+    .wizard-step {
+      opacity: 0;
+      animation: fadeIn 0.4s forwards;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(15px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .hover-lift {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .hover-lift:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15) !important;
+    }
+    .target-card {
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+      border: 1px solid var(--ds-gray-200);
+    }
+    .target-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.08) !important;
+      border-color: var(--ds-primary);
+    }
+    
+    #detailActionPills .nav-link { transition: all 0.2s ease; }
+    #detailActionPills .nav-link.active[data-type="tarik"] { background-color: rgba(220,53,69,0.1) !important; color: #dc3545 !important; }
+    #detailActionPills .nav-link.active[data-type="simpan"] { background-color: rgba(16,185,129,0.1) !important; color: #10b981 !important; }
+  </style>
 
   <!-- Libs JS -->
 <script src="./assets/libs/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
@@ -1156,6 +1255,7 @@
 
   <script src="./assets/js/storage.js"></script>
   <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/savings.js"></script>
 </body>
 
 </html>
