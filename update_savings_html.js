@@ -1,7 +1,8 @@
 const fs = require('fs');
 
-let html = fs.readFileSync('docs/savings.html', 'utf8');
-
+let html = fs.readFileSync('docs/index.html', 'utf8');
+html = html.replace('<title>FinStudent - Dashboard</title>', '<title>Rajin Menabung | FinStudent</title>');
+html = html.replace('<title>Dashboard | FinStudent</title>', '<title>Rajin Menabung | FinStudent</title>');
 const startIndex = html.indexOf('<div class="custom-container">');
 const endTag = '<!-- Libs JS -->';
 const endIndex = html.indexOf(endTag);
@@ -16,13 +17,13 @@ const customContainerContent = `
         <!-- Header -->
         <div class="row mb-6 g-6">
           <div class="col-12">
-            <div class="bg-primary p-6 p-md-8 rounded-4 position-relative overflow-hidden shadow">
+            <div class="bg-primary p-6 p-md-8 rounded-4 position-relative overflow-hidden shadow-premium">
               <div class="d-flex flex-column flex-md-row align-items-md-center justify-content-between gap-4" style="z-index: 2; position: relative;">
                 <div>
                   <h1 class="text-white mb-1">Rajin Menabung</h1>
                   <p class="text-white-50 mb-0">Nabung dikit-dikit, lama-lama jadi bukit! Buat target dan wujudkan mimpimu.</p>
                 </div>
-                <button type="button" class="btn btn-white btn-lg rounded-pill shadow-sm text-primary fw-bold px-4 hover-lift" data-bs-toggle="modal" data-bs-target="#wizardModal">
+                <button type="button" class="btn btn-white btn-lg rounded-pill shadow-sm text-primary fw-bold px-4 hover-lift-premium" data-bs-toggle="modal" data-bs-target="#wizardModal">
                   <i class="ti ti-plus me-2"></i>Buat Target Baru
                 </button>
               </div>
@@ -53,7 +54,7 @@ const customContainerContent = `
   <!-- Wizard Modal (Multi-step) -->
   <div class="modal fade" id="wizardModal" tabindex="-1" aria-hidden="true" data-bs-backdrop="static">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content rounded-4 border-0 shadow-lg overflow-hidden">
+      <div class="modal-content rounded-4 border-0 shadow-premium overflow-hidden glass-effect">
         
         <!-- Progress Indicator -->
         <div class="bg-light p-3 border-bottom d-flex justify-content-center gap-2" id="wizardProgress">
@@ -117,7 +118,7 @@ const customContainerContent = `
   <!-- Target Detail Modal -->
   <div class="modal fade" id="targetDetailModal" tabindex="-1" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
-      <div class="modal-content rounded-4 border-0 overflow-hidden shadow-lg">
+      <div class="modal-content rounded-4 border-0 overflow-hidden shadow-premium glass-effect">
         <div class="modal-header border-0 bg-primary text-white p-4">
           <div>
             <h4 class="modal-title text-white mb-1 fw-bold" id="detailTargetName">Nama Target</h4>
@@ -224,7 +225,7 @@ const customContainerContent = `
 
   `;
 
-const newHtml = html.substring(0, startIndex) + customContainerContent + html.substring(endIndex);
+const newHtml = html.substring(0, startIndex) + customContainerContent + html.substring(endIndex).replace('</body>', '  <script src="./assets/js/savings.js"></script>\n</body>');
 
 fs.writeFileSync('docs/savings.html', newHtml);
-console.log('savings.html updated');
+console.log('savings.html recreated from index.html successfully');

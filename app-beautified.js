@@ -124,16 +124,13 @@ document.addEventListener("DOMContentLoaded", (async () => {
                 const e = n.value,
                     t = o.value;
                 let a = [];
-                a = "pemasukan" === e ? FinCategories.pemasukan : FinCategories[t] || FinCategories.kebutuhan, s.innerHTML = "", a.forEach((e => {
-                    const t = document.createElement("option");
-                    t.value = e.value, t.textContent = e.label, e.isPeriodic && (t.dataset.periodic = "true"), s.appendChild(t)
-                })), v()
+                a = "pemasukan" === e ? FinCategories.pemasukan : FinCategories[t] || FinCategories.kebutuhan, if(s.tagName==="SELECT"){s.innerHTML = ""; a.forEach((e => { const t = document.createElement("option"); t.value = e.value; t.textContent = e.label; e.isPeriodic && (t.dataset.periodic = "true"); s.appendChild(t); }));} v();
             },
             y = () => {
                 "pengeluaran" === n.value ? i.classList.remove("d-none") : (i.classList.add("d-none"), l.classList.add("d-none")), g()
             },
             v = () => {
-                const e = s.options[s.selectedIndex];
+                const e = s.tagName==="SELECT" ? s.options[s.selectedIndex] : null;
                 e && "true" === e.dataset.periodic && "pengeluaran" === n.value ? l.classList.remove("d-none") : (l.classList.add("d-none"), c.value = 1), b()
             },
             b = () => {
@@ -222,7 +219,7 @@ document.addEventListener("DOMContentLoaded", (async () => {
                             k = "pemasukan" === i.type ? "success" : "danger",
                             x = "pemasukan" === i.type ? "+" : "-";
                         g.className = "dropdown-item px-3 py-3 d-flex align-items-center gap-3 transition-all" + (r !== l.length - 1 ? " border-bottom" : ""), g.href = "#", g.style.whiteSpace = "normal", g.innerHTML = `\n            <div class="bg-${k}-subtle text-${k} rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;">\n              <i class="ti ${f} fs-4"></i>\n            </div>\n            <div class="flex-grow-1 overflow-hidden">\n              <h6 class="mb-0 text-truncate text-dark fw-bold" style="font-size: 0.95rem;">${i.description||i.category}</h6>\n              <div class="text-muted small d-flex align-items-center gap-1 mt-1">\n                <span class="badge bg-${k}-subtle text-${k} rounded-pill px-2 py-0" style="font-size: 0.65rem;">${"pemasukan"===i.type?"Masuk":"Keluar"}</span>\n                <span class="text-truncate" style="max-width: 120px;">• ${i.category}</span>\n              </div>\n            </div>\n            <div class="text-end flex-shrink-0">\n              <div class="fw-bold text-${k}" style="font-size: 0.95rem;">${x}${e(i.amount)}</div>\n              <div class="text-muted small mt-1" style="font-size: 0.7rem;">${t(i.date)}</div>\n            </div>\n          `, g.addEventListener("click", (t => {
-                            t.preventDefault(), m.value = i.amount, p.value = e(i.amount).replace("Rp", "").trim(), n.value = i.type, a && (a.className = "custom-styled-select " + ("pengeluaran" === i.type ? "select-expense" : "select-income")), "pengeluaran" === i.type && i.nature && (o.value = i.nature, d && (d.className = "custom-styled-select " + ("kebutuhan" === i.nature ? "select-kebutuhan" : "select-keinginan"))), y(), s.value = i.category, v(), i.is_periodic && i.amortization_days > 1 && (c.value = i.amortization_days, b()), document.getElementById("description").value = i.description || ""
+                            t.preventDefault(), m.value = i.amount, p.value = e(i.amount).replace("Rp", "").trim(), n.value = i.type, a && (a.className = "custom-styled-select " + ("pengeluaran" === i.type ? "select-expense" : "select-income")), "pengeluaran" === i.type && i.nature && (o.value = i.nature, d && (d.className = "custom-styled-select " + ("kebutuhan" === i.nature ? "select-kebutuhan" : "select-keinginan"))), y(), s.value = i.category, v(), s.dispatchEvent(new Event("change")), i.is_periodic && i.amortization_days > 1 && (c.value = i.amortization_days, b()), document.getElementById("description").value = i.description || ""
                         })), u.appendChild(g), h.appendChild(u)
                     }))
                 } catch (e) {

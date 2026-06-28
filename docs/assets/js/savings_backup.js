@@ -17,40 +17,16 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // DOM Elements - Detail Modal
   const detailModal = document.getElementById('targetDetailModal');
-  let bsDetailModal = null; // initialized below
+  const bsDetailModal = new bootstrap.Modal(detailModal);
   const detailActionAmount = document.getElementById('detailActionAmount');
-  const detailActionDate = document.getElementById('detailActionDate');
   const detailActionDesc = document.getElementById('detailActionDesc');
   const btnSaveTransaction = document.getElementById('btnSaveTransaction');
-  
-  // DOM Elements - Edit Target Modal
-  const editTargetName = document.getElementById('editTargetName');
-  const editTargetAmount = document.getElementById('editTargetAmount');
-  const editTargetDate = document.getElementById('editTargetDate');
-  const btnUpdateTarget = document.getElementById('btnUpdateTarget');
   const btnDeleteTarget = document.getElementById('btnDeleteTarget');
-
-  // DOM Elements - Edit Transaction Modal
-  const editTxDate = document.getElementById('editTxDate');
-  const editTxAmount = document.getElementById('editTxAmount');
-  const editTxDesc = document.getElementById('editTxDesc');
-  const editTxId = document.getElementById('editTxId');
-  const btnUpdateTx = document.getElementById('btnUpdateTx');
-  const btnDeleteTx = document.getElementById('btnDeleteTx');
 
   // State
   let currentStep = 1;
   let currentTargetId = null;
   let activeTabType = 'simpan';
-  let txPage = 1;
-  const TX_PER_PAGE = 5;
-
-  // Initialize Modals
-  if (detailModal) {
-    bsDetailModal = new bootstrap.Modal(detailModal);
-  }
-  const bsEditTargetModal = document.getElementById('editTargetModal') ? new bootstrap.Modal(document.getElementById('editTargetModal')) : null;
-  const bsEditTxModal = document.getElementById('editTransactionModal') ? new bootstrap.Modal(document.getElementById('editTransactionModal')) : null;
 
   // Utils
   const formatCurrency = (val) => {
@@ -59,13 +35,6 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   const parseCurrency = (val) => {
     return parseInt(val.replace(/[^0-9]/g, ''), 10) || 0;
-  };
-  
-  const formatDateForInput = (dateString) => {
-    if (!dateString) return '';
-    const d = new Date(dateString);
-    if(isNaN(d)) return '';
-    return d.toISOString().split('T')[0];
   };
 
   // 1. Initial Render
@@ -135,6 +104,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const currentEl = document.getElementById('step' + currentStep);
     currentEl.classList.remove('d-none');
     
+    // Force reflow to restart animation
     void currentEl.offsetWidth; 
     currentEl.classList.add('active');
 
@@ -167,6 +137,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   };
 
   btnNextWizard.addEventListener('click', async () => {
+    // Validation
     if (currentStep === 1) {
       if (!inputName.value.trim()) return await CustomAlert.alert('Nama target tidak boleh kosong!');
     } else if (currentStep === 2) {
@@ -179,6 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       selected.setHours(0,0,0,0);
       if (isNaN(selected.getTime()) || selected < today) return await CustomAlert.alert('Tanggal tidak valid atau sudah lewat!');
       
+      // Save Target
       await ApiService.addSavingTarget({
         name: inputName.value.trim(),
         targetAmount: parseCurrency(inputAmount.value),
@@ -186,6 +158,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       });
       await renderTargets();
     } else if (currentStep === 4) {
+      // Finish
       bsWizardModal.hide();
       return;
     }
@@ -203,6 +176,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
   });
 
+  // Reset Wizard on hidden
   wizardModal.addEventListener('hidden.bs.modal', () => {
     currentStep = 1;
     inputName.value = '';
@@ -212,19 +186,16 @@ document.addEventListener('DOMContentLoaded', async () => {
     updateWizardUI();
   });
 
-  // Currency Formatters
-  const setupCurrencyInput = (el) => {
-    if(!el) return;
-    el.addEventListener('input', (e) => {
-      let val = parseCurrency(e.target.value);
-      e.target.value = val > 0 ? formatCurrency(val) : '';
-    });
-  };
-  
-  setupCurrencyInput(inputAmount);
-  setupCurrencyInput(detailActionAmount);
-  setupCurrencyInput(editTargetAmount);
-  setupCurrencyInput(editTxAmount);
+  // Format Currency Input
+  inputAmount.addEventListener('input', (e) => {
+    let val = parseCurrency(e.target.value);
+    e.target.value = val > 0 ? formatCurrency(val) : '';
+  });
+
+  detailActionAmount.addEventListener('input', (e) => {
+    let val = parseCurrency(e.target.value);
+    e.target.value = val > 0 ? formatCurrency(val) : '';
+  });
 
   // 3. Detail Modal Logic
   const openTargetDetail = async (id) => {
@@ -233,15 +204,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     const target = targets.find(t => t.id === id);
     if (!target) return;
 
+    await refreshDetailData(target);
+    
     // Reset Form
     detailActionAmount.value = '';
     detailActionDesc.value = '';
-    detailActionDate.valueAsDate = new Date();
     activeTabType = 'simpan';
     document.getElementById('tab-simpan').click();
 
-    txPage = 1;
-    await refreshDetailData(target);
     bsDetailModal.show();
   };
 
@@ -259,121 +229,44 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     let percentage = (totalSaved / parseFloat(target.targetAmount)) * 100;
     percentage = percentage > 100 ? 100 : percentage < 0 ? 0 : percentage;
-    
-    let remaining = parseFloat(target.targetAmount) - totalSaved;
-    let remainingText = formatCurrency(remaining);
-    
-    if(remaining <= 0) {
-      document.getElementById('detailRemainingAmount').textContent = "Target Terlampaui 🎉";
-      document.getElementById('detailRemainingAmount').className = "fs-4 fw-bolder text-success";
-    } else {
-      document.getElementById('detailRemainingAmount').textContent = remainingText;
-      document.getElementById('detailRemainingAmount').className = "fs-4 fw-bolder text-warning";
-    }
 
     document.getElementById('detailCurrentAmount').textContent = formatCurrency(totalSaved);
     document.getElementById('detailProgressBar').style.width = percentage + '%';
     document.getElementById('detailProgressText').textContent = percentage.toFixed(1) + '%';
 
-    // Populate Edit Modal Data
-    if(editTargetName) editTargetName.value = target.name;
-    if(editTargetAmount) editTargetAmount.value = formatCurrency(target.targetAmount);
-    if(editTargetDate) editTargetDate.value = formatDateForInput(target.targetDate);
-
-    // Render Pagination
-    renderTargetHistoryPagination(targetSavings);
-  };
-
-  const renderTargetHistoryPagination = (targetSavings) => {
+    // Render Tx History
     const historyContainer = document.getElementById('targetTransactionHistory');
     historyContainer.innerHTML = '';
     
-    const btnPrevTx = document.getElementById('btnPrevTxPage');
-    const btnNextTx = document.getElementById('btnNextTxPage');
-    const txPageInfo = document.getElementById('targetTxPageInfo');
-
     if (targetSavings.length === 0) {
-      historyContainer.innerHTML = '<div class="text-center text-muted small py-4">Belum ada transaksi</div>';
-      txPageInfo.textContent = 'Menampilkan 0-0 dari 0';
-      if(btnPrevTx) btnPrevTx.disabled = true;
-      if(btnNextTx) btnNextTx.disabled = true;
-      return;
-    }
-    
-    // Sort desc
-    targetSavings.sort((a,b) => new Date(b.date) - new Date(a.date));
-    
-    const totalPages = Math.ceil(targetSavings.length / TX_PER_PAGE);
-    if (txPage > totalPages) txPage = totalPages;
-    if (txPage < 1) txPage = 1;
-    
-    const startIndex = (txPage - 1) * TX_PER_PAGE;
-    const endIndex = Math.min(startIndex + TX_PER_PAGE, targetSavings.length);
-    const paginatedItems = targetSavings.slice(startIndex, endIndex);
-
-    txPageInfo.textContent = `Menampilkan ${startIndex + 1}-${endIndex} dari ${targetSavings.length}`;
-    if(btnPrevTx) btnPrevTx.disabled = (txPage === 1);
-    if(btnNextTx) btnNextTx.disabled = (txPage === totalPages);
-
-    paginatedItems.forEach(tx => {
-      const item = document.createElement('div');
-      item.className = 'feed-item position-relative mb-2 pb-2 border-bottom hover-bg-light p-2 rounded-3 transition-all cursor-pointer';
-      item.style.cursor = 'pointer';
-      
-      const isSimpan = tx.type === 'simpan';
-      const iconClass = isSimpan ? 'saving' : 'expense';
-      const iconTi = isSimpan ? 'ti-trending-up' : 'ti-trending-down';
-      const sign = isSimpan ? '+' : '-';
-      
-      item.innerHTML = `
-        <div class="d-flex align-items-center w-100">
-          <div class="feed-icon ${iconClass} me-3 flex-shrink-0" style="width:40px;height:40px;">
-            <i class="ti ${iconTi} fs-5"></i>
+      historyContainer.innerHTML = '<div class="text-center text-muted small py-3">Belum ada transaksi</div>';
+    } else {
+      // Sort desc
+      targetSavings.sort((a,b) => new Date(b.date) - new Date(a.date));
+      targetSavings.forEach(tx => {
+        const item = document.createElement('div');
+        item.className = 'feed-item';
+        const isSimpan = tx.type === 'simpan';
+        const iconClass = isSimpan ? 'saving' : 'expense';
+        const iconTi = isSimpan ? 'ti-trending-up' : 'ti-trending-down';
+        const sign = isSimpan ? '+' : '-';
+        
+        item.innerHTML = `
+          <div class="feed-icon ${iconClass}">
+            <i class="ti ${iconTi}"></i>
           </div>
-          <div class="feed-info flex-grow-1 min-w-0 pe-2">
-            <div class="feed-desc fw-bold text-truncate">${tx.description || (isSimpan ? 'Menabung' : 'Penarikan')}</div>
-            <div class="feed-meta small text-muted">
-              <span>${new Date(tx.date).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
+          <div class="feed-info">
+            <div class="feed-desc">${tx.description || (isSimpan ? 'Menabung' : 'Penarikan')}</div>
+            <div class="feed-meta">
+              <span>${new Date(tx.date).toLocaleDateString('id-ID', {day:'numeric', month:'short'})}</span>
             </div>
           </div>
-          <div class="feed-amount ${iconClass} fw-bolder flex-shrink-0">${sign}${formatCurrency(tx.amount)}</div>
-        </div>
-      `;
-      
-      item.addEventListener('click', () => {
-        openEditTxModal(tx);
+          <div class="feed-amount ${iconClass}">${sign}${formatCurrency(tx.amount)}</div>
+        `;
+        historyContainer.appendChild(item);
       });
-      historyContainer.appendChild(item);
-    });
+    }
   };
-
-  const openEditTxModal = (tx) => {
-    editTxId.value = tx.id;
-    editTxDate.value = formatDateForInput(tx.date);
-    editTxAmount.value = formatCurrency(tx.amount);
-    editTxDesc.value = tx.description || '';
-    
-    bsDetailModal.hide();
-    bsEditTxModal.show();
-  };
-
-  if(document.getElementById('btnPrevTxPage')) {
-    document.getElementById('btnPrevTxPage').addEventListener('click', async () => {
-      txPage--;
-      const targets = await ApiService.getSavingTargets();
-      const target = targets.find(t => t.id === currentTargetId);
-      await refreshDetailData(target);
-    });
-  }
-
-  if(document.getElementById('btnNextTxPage')) {
-    document.getElementById('btnNextTxPage').addEventListener('click', async () => {
-      txPage++;
-      const targets = await ApiService.getSavingTargets();
-      const target = targets.find(t => t.id === currentTargetId);
-      await refreshDetailData(target);
-    });
-  }
 
   // Tab action listener
   document.querySelectorAll('#detailActionPills .nav-link').forEach(tab => {
@@ -385,19 +278,13 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Save Transaction
   btnSaveTransaction.addEventListener('click', async () => {
     const amount = parseCurrency(detailActionAmount.value);
-    const dateVal = detailActionDate.value;
     if (amount <= 0) return await CustomAlert.alert('Masukkan nominal yang valid!');
-    if (!dateVal) return await CustomAlert.alert('Pilih tanggal transaksi!');
-
-    const parsedDate = new Date(dateVal);
-    parsedDate.setHours(new Date().getHours()); 
-    parsedDate.setMinutes(new Date().getMinutes());
 
     await ApiService.addSavingTransaction({
       targetId: currentTargetId,
       amount: amount,
       type: activeTabType,
-      date: parsedDate.toISOString(),
+      date: new Date().toISOString(),
       description: detailActionDesc.value.trim()
     });
 
@@ -411,94 +298,13 @@ document.addEventListener('DOMContentLoaded', async () => {
     await renderTargets(); // update background cards
   });
 
-  // Update Target
-  if (btnUpdateTarget) {
-    btnUpdateTarget.addEventListener('click', async () => {
-      const name = editTargetName.value.trim();
-      const amount = parseCurrency(editTargetAmount.value);
-      const dateVal = editTargetDate.value;
-      
-      if (!name) return await CustomAlert.alert('Nama target tidak boleh kosong!');
-      if (amount <= 0) return await CustomAlert.alert('Total target harus lebih dari Rp 0!');
-      if (!dateVal) return await CustomAlert.alert('Pilih tanggal target selesai!');
-
-      await ApiService.updateSavingTarget(currentTargetId, {
-        name: name,
-        targetAmount: amount,
-        targetDate: dateVal
-      });
-
-      bsEditTargetModal.hide();
-      const targets = await ApiService.getSavingTargets();
-      const target = targets.find(t => t.id === currentTargetId);
-      await refreshDetailData(target);
-      await renderTargets();
-      bsDetailModal.show();
-    });
-  }
-
   // Delete Target
-  if (btnDeleteTarget) {
-    btnDeleteTarget.addEventListener('click', async () => {
-      if ((await CustomAlert.confirm('Yakin ingin menghapus target menabung ini? Uang yang sudah dicatat akan tetap ada di total tabungan global.', 'Hapus Target', './assets/images/mochi-rm.png'))) {
-        await ApiService.deleteSavingTarget(currentTargetId);
-        bsEditTargetModal.hide();
-        await renderTargets();
-      }
-    });
-  }
-
-  // Update Transaction
-  if (btnUpdateTx) {
-    btnUpdateTx.addEventListener('click', async () => {
-      const id = editTxId.value;
-      const amount = parseCurrency(editTxAmount.value);
-      const dateVal = editTxDate.value;
-      const desc = editTxDesc.value.trim();
-
-      if (amount <= 0) return await CustomAlert.alert('Masukkan nominal yang valid!');
-      if (!dateVal) return await CustomAlert.alert('Pilih tanggal transaksi!');
-      
-      const parsedDate = new Date(dateVal);
-
-      await ApiService.updateSavingTransaction(id, {
-        amount: amount,
-        date: parsedDate.toISOString(),
-        description: desc
-      });
-
-      bsEditTxModal.hide();
-      const targets = await ApiService.getSavingTargets();
-      const target = targets.find(t => t.id === currentTargetId);
-      await refreshDetailData(target);
+  btnDeleteTarget.addEventListener('click', async () => {
+    if ((await CustomAlert.confirm('Yakin ingin menghapus target menabung ini? Uang yang sudah dicatat akan tetap ada di total tabungan global, tetapi target ini akan hilang.'))) {
+      await ApiService.deleteSavingTarget(currentTargetId);
+      bsDetailModal.hide();
       await renderTargets();
-      bsDetailModal.show();
-    });
-  }
-
-  // Delete Transaction
-  if (btnDeleteTx) {
-    btnDeleteTx.addEventListener('click', async () => {
-      const id = editTxId.value;
-      if ((await CustomAlert.confirm('Yakin ingin menghapus riwayat tabungan ini?', 'Hapus Riwayat', './assets/images/mochi-rm.png'))) {
-        await ApiService.deleteSavingTransaction(id);
-        bsEditTxModal.hide();
-        const targets = await ApiService.getSavingTargets();
-        const target = targets.find(t => t.id === currentTargetId);
-        await refreshDetailData(target);
-        await renderTargets();
-        bsDetailModal.show();
-      }
-    });
-  }
-
-  // Handle Cancel from Edit Modals back to Detail Modal
-  document.querySelectorAll('[data-bs-target="#targetDetailModal"]').forEach(el => {
-    el.addEventListener('click', async () => {
-      const targets = await ApiService.getSavingTargets();
-      const target = targets.find(t => t.id === currentTargetId);
-      if(target) await refreshDetailData(target);
-    });
+    }
   });
 
   // Init

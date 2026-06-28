@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', async () => {
+const fs = require('fs');
+
+const code = `document.addEventListener('DOMContentLoaded', async () => {
   // DOM Elements - UI
   const targetCardsContainer = document.getElementById('targetCardsContainer');
   const emptyStateContainer = document.getElementById('emptyStateContainer');
@@ -92,30 +94,30 @@ document.addEventListener('DOMContentLoaded', async () => {
 
         const card = document.createElement('div');
         card.className = 'col-12 col-md-6 col-xl-4';
-        card.innerHTML = `
-          <div class="card target-card h-100 rounded-4" data-id="${target.id}">
+        card.innerHTML = \`
+          <div class="card target-card h-100 rounded-4" data-id="\${target.id}">
             <div class="card-body p-4 p-md-5">
               <div class="d-flex justify-content-between align-items-start mb-3">
-                <h4 class="fw-bold mb-0 text-truncate pe-3">${target.name}</h4>
+                <h4 class="fw-bold mb-0 text-truncate pe-3">\${target.name}</h4>
                 <div class="icon-shape icon-md rounded-circle bg-primary-subtle text-primary flex-shrink-0">
                   <i class="ti ti-target fs-5"></i>
                 </div>
               </div>
               <div class="mb-4">
                 <div class="text-muted small mb-1">Terkumpul</div>
-                <div class="fs-3 fw-bolder text-primary">${formatCurrency(totalSaved)}</div>
-                <div class="text-muted small">dari ${formatCurrency(target.targetAmount)}</div>
+                <div class="fs-3 fw-bolder text-primary">\${formatCurrency(totalSaved)}</div>
+                <div class="text-muted small">dari \${formatCurrency(target.targetAmount)}</div>
               </div>
               <div class="progress mb-2" style="height: 8px; border-radius: 4px;">
-                <div class="progress-bar bg-primary" role="progressbar" style="width: ${percentage}%"></div>
+                <div class="progress-bar bg-primary" role="progressbar" style="width: \${percentage}%"></div>
               </div>
               <div class="d-flex justify-content-between text-muted small fw-semibold">
-                <span>${percentage.toFixed(0)}%</span>
-                <span><i class="ti ti-calendar me-1"></i>${new Date(target.targetDate).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
+                <span>\${percentage.toFixed(0)}%</span>
+                <span><i class="ti ti-calendar me-1"></i>\${new Date(target.targetDate).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
               </div>
             </div>
           </div>
-        `;
+        \`;
         
         card.querySelector('.target-card').addEventListener('click', () => openTargetDetail(target.id));
         targetCardsContainer.appendChild(card);
@@ -264,7 +266,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     let remainingText = formatCurrency(remaining);
     
     if(remaining <= 0) {
-      document.getElementById('detailRemainingAmount').textContent = "Target Terlampaui 🎉";
+      document.getElementById('detailRemainingAmount').textContent = "Target Terlampaui \uD83C\uDF89";
       document.getElementById('detailRemainingAmount').className = "fs-4 fw-bolder text-success";
     } else {
       document.getElementById('detailRemainingAmount').textContent = remainingText;
@@ -311,7 +313,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     const endIndex = Math.min(startIndex + TX_PER_PAGE, targetSavings.length);
     const paginatedItems = targetSavings.slice(startIndex, endIndex);
 
-    txPageInfo.textContent = `Menampilkan ${startIndex + 1}-${endIndex} dari ${targetSavings.length}`;
+    txPageInfo.textContent = \`Menampilkan \${startIndex + 1}-\${endIndex} dari \${targetSavings.length}\`;
     if(btnPrevTx) btnPrevTx.disabled = (txPage === 1);
     if(btnNextTx) btnNextTx.disabled = (txPage === totalPages);
 
@@ -325,20 +327,20 @@ document.addEventListener('DOMContentLoaded', async () => {
       const iconTi = isSimpan ? 'ti-trending-up' : 'ti-trending-down';
       const sign = isSimpan ? '+' : '-';
       
-      item.innerHTML = `
+      item.innerHTML = \`
         <div class="d-flex align-items-center w-100">
-          <div class="feed-icon ${iconClass} me-3 flex-shrink-0" style="width:40px;height:40px;">
-            <i class="ti ${iconTi} fs-5"></i>
+          <div class="feed-icon \${iconClass} me-3 flex-shrink-0" style="width:40px;height:40px;">
+            <i class="ti \${iconTi} fs-5"></i>
           </div>
           <div class="feed-info flex-grow-1 min-w-0 pe-2">
-            <div class="feed-desc fw-bold text-truncate">${tx.description || (isSimpan ? 'Menabung' : 'Penarikan')}</div>
+            <div class="feed-desc fw-bold text-truncate">\${tx.description || (isSimpan ? 'Menabung' : 'Penarikan')}</div>
             <div class="feed-meta small text-muted">
-              <span>${new Date(tx.date).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
+              <span>\${new Date(tx.date).toLocaleDateString('id-ID', {day:'numeric', month:'short', year:'numeric'})}</span>
             </div>
           </div>
-          <div class="feed-amount ${iconClass} fw-bolder flex-shrink-0">${sign}${formatCurrency(tx.amount)}</div>
+          <div class="feed-amount \${iconClass} fw-bolder flex-shrink-0">\${sign}\${formatCurrency(tx.amount)}</div>
         </div>
-      `;
+      \`;
       
       item.addEventListener('click', () => {
         openEditTxModal(tx);
@@ -504,3 +506,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   // Init
   renderTargets();
 });
+`;
+
+fs.writeFileSync('docs/assets/js/savings.js', code);
+console.log('savings.js rewritten!');

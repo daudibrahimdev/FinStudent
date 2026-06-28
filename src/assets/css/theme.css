@@ -13266,6 +13266,39 @@
   background-color: #405de6;
 }
 
+.glass-effect {
+  background: rgba(255, 255, 255, 0.1) !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+[data-theme=dark] .glass-effect {
+  background: rgba(15, 23, 42, 0.6) !important;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.shadow-premium {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1) !important;
+}
+
+[data-theme=dark] .shadow-premium {
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.5) !important;
+}
+
+.hover-lift-premium {
+  transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1), box-shadow 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.hover-lift-premium:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme=dark] .hover-lift-premium:hover {
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 10px 10px -5px rgba(0, 0, 0, 0.3) !important;
+}
+
 /*!
  * Bootstrap  v5.3.3 (https://getbootstrap.com/)
  * Copyright 2011-2024 The Bootstrap Authors
@@ -13410,18 +13443,18 @@
   color-scheme: dark;
   --ds-body-color: #c4cdd5;
   --ds-body-color-rgb: 196, 205, 213;
-  --ds-body-bg: #141a21;
-  --ds-body-bg-rgb: 20, 26, 33;
+  --ds-body-bg: #0f172a;
+  --ds-body-bg-rgb: 15, 23, 42;
   --ds-emphasis-color: #fff;
   --ds-emphasis-color-rgb: 255, 255, 255;
   --ds-secondary-color: rgba(196, 205, 213, 0.75);
   --ds-secondary-color-rgb: 196, 205, 213;
-  --ds-secondary-bg: #1c252e;
-  --ds-secondary-bg-rgb: 28, 37, 46;
+  --ds-secondary-bg: #1e293b;
+  --ds-secondary-bg-rgb: 30, 41, 59;
   --ds-tertiary-color: #637381;
   --ds-tertiary-color-rgb: 99, 115, 129;
-  --ds-tertiary-bg: #182028;
-  --ds-tertiary-bg-rgb: 24, 32, 40;
+  --ds-tertiary-bg: #334155;
+  --ds-tertiary-bg-rgb: 51, 65, 85;
   --ds-primary-text-emphasis: #66caa9;
   --ds-secondary-text-emphasis: #a1abb3;
   --ds-success-text-emphasis: #7adc9e;
@@ -13446,7 +13479,7 @@
   --ds-danger-border-subtle: #99341d;
   --ds-light-border-subtle: #454f5b;
   --ds-dark-border-subtle: #1c252e;
-  --ds-heading-color: #f9fafb;
+  --ds-heading-color: #fff;
   --ds-link-color: #66caa9;
   --ds-link-hover-color: #85d5ba;
   --ds-link-color-rgb: 102, 202, 169;
@@ -13454,8 +13487,8 @@
   --ds-code-color: #e685b5;
   --ds-highlight-color: #c4cdd5;
   --ds-highlight-bg: #664400;
-  --ds-border-color: rgba(99, 115, 129, 0.25);
-  --ds-border-color-translucent: rgba(99, 115, 129, 0.25);
+  --ds-border-color: rgba(255, 255, 255, 0.1);
+  --ds-border-color-translucent: rgba(255, 255, 255, 0.1);
   --ds-form-valid-color: #7adc9e;
   --ds-form-valid-border-color: #7adc9e;
   --ds-form-invalid-color: #ff9a83;

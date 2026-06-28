@@ -1,165 +1,103 @@
-/**
- * FinStudent - Smart Proxy Data Service Layer v2
- * Otomatis memilih: localStorage (Guest) atau PHP API (Logged In)
- * Mendukung field: nature, is_periodic, amortization_days
- */
+const STORAGE_KEY_SETUP="finStudent_setup_v2",STORAGE_KEY_TRANSACTIONS="finStudent_transactions_v2",STORAGE_KEY_SAVINGS="finStudent_savings_v3",STORAGE_KEY_SAVING_TARGETS="finStudent_saving_targets_v1",STORAGE_KEY_CUSTOM_CATEGORIES="finStudent_custom_cats_v1",API_BASE="api",LocalStore={getSetup(){const a=localStorage.getItem(STORAGE_KEY_SETUP);return a?JSON.parse(a):null},saveSetup(a){localStorage.setItem(STORAGE_KEY_SETUP,JSON.stringify(a))},getTransactions(){const a=localStorage.getItem(STORAGE_KEY_TRANSACTIONS);return a?JSON.parse(a):[]},addTransaction(a){const e=this.getTransactions(),i={...a,id:Date.now().toString()+Math.random().toString(36).substring(2,9),is_periodic:a.is_periodic||!1,amortization_days:a.amortization_days||1,nature:a.nature||null,createdAt:(new Date).toISOString()};return e.push(i),e.sort(((a,e)=>new Date(e.date)-new Date(a.date))),localStorage.setItem(STORAGE_KEY_TRANSACTIONS,JSON.stringify(e)),i},deleteTransaction(a){let e=this.getTransactions();e=e.filter((e=>e.id!==a)),localStorage.setItem(STORAGE_KEY_TRANSACTIONS,JSON.stringify(e))},getSavings(){const a=localStorage.getItem(STORAGE_KEY_SAVINGS);return a?JSON.parse(a):[]},addSavingTransaction(a){const e=this.getSavings(),i={...a,id:Date.now().toString()+Math.random().toString(36).substring(2,9),created_at:(new Date).toISOString()};return e.push(i),e.sort(((a,e)=>new Date(e.date)-new Date(a.date))),localStorage.setItem(STORAGE_KEY_SAVINGS,JSON.stringify(e)),i},deleteSavingTransaction(a){let e=this.getSavings();e=e.filter((e=>e.id!==a)),localStorage.setItem(STORAGE_KEY_SAVINGS,JSON.stringify(e))},getSavingTargets(){const a=localStorage.getItem(STORAGE_KEY_SAVING_TARGETS);return a?JSON.parse(a):[]},addSavingTarget(a){const e=this.getSavingTargets(),i={...a,id:Date.now().toString()+Math.random().toString(36).substring(2,9),createdAt:new Date().toISOString()};return e.push(i),localStorage.setItem(STORAGE_KEY_SAVING_TARGETS,JSON.stringify(e)),i},deleteSavingTarget(a){let e=this.getSavingTargets();e=e.filter(e=>e.id!==a);localStorage.setItem(STORAGE_KEY_SAVING_TARGETS,JSON.stringify(e));},updateSavingTarget(id,data){let e=this.getSavingTargets();let idx=e.findIndex(x=>x.id===id);if(idx!==-1){e[idx]={...e[idx],...data};localStorage.setItem(STORAGE_KEY_SAVING_TARGETS,JSON.stringify(e));return e[idx];}return null;},updateSavingTransaction(id,data){let e=this.getSavings();let idx=e.findIndex(x=>x.id===id);if(idx!==-1){e[idx]={...e[idx],...data};localStorage.setItem(STORAGE_KEY_SAVINGS,JSON.stringify(e));return e[idx];}return null;},getAllDataForSync(){return{setup:this.getSetup(),transactions:this.getTransactions(),savings:this.getSavings()}},getCustomCategories(){const a=localStorage.getItem(STORAGE_KEY_CUSTOM_CATEGORIES);return a?JSON.parse(a):[]},saveCustomCategory(a){let e=this.getCustomCategories();if(a.id){const idx=e.findIndex(x=>x.id===a.id);if(idx!==-1)e[idx]=a;else e.push(a)}else{a.id='cat_'+Date.now();e.push(a)}localStorage.setItem(STORAGE_KEY_CUSTOM_CATEGORIES,JSON.stringify(e));return a},deleteCustomCategory(id){let e=this.getCustomCategories();e=e.filter(x=>x.id!==id);localStorage.setItem(STORAGE_KEY_CUSTOM_CATEGORIES,JSON.stringify(e))},clearAll(){localStorage.removeItem(STORAGE_KEY_SETUP),localStorage.removeItem(STORAGE_KEY_TRANSACTIONS),localStorage.removeItem(STORAGE_KEY_SAVINGS)}},FinCategories={ _kebutuhan:[{value:"Tempat Tinggal & Utilitas",label:"Tempat Tinggal & Utilitas",icon:"ti-home",isPeriodic:!0,isCustom:!1},{value:"Konsumsi Dasar Pokok",label:"Konsumsi Dasar Pokok",icon:"ti-shopping-cart",isPeriodic:!0,isCustom:!1},{value:"Transportasi Wajib",label:"Transportasi Wajib",icon:"ti-car",isPeriodic:!1,isCustom:!1},{value:"Servis Rutin Kendaraan",label:"Servis Rutin Kendaraan",icon:"ti-tools",isPeriodic:!0,isCustom:!1},{value:"Kebutuhan Pendidikan",label:"Kebutuhan Pendidikan",icon:"ti-book",isPeriodic:!1,isCustom:!1},{value:"Kesehatan & Kebersihan diri",label:"Kesehatan & Kebersihan diri",icon:"ti-first-aid-kit",isPeriodic:!0,isCustom:!1},{value:"Kebutuhan & Tagihan lainnya",label:"Kebutuhan & Tagihan lainnya",icon:"ti-file-invoice",isPeriodic:!1,isCustom:!1}], _keinginan:[{value:"Makanan dan Minuman (Jajan)",label:"Makanan dan Minuman (Jajan)",icon:"ti-coffee",isPeriodic:!1,isCustom:!1},{value:"Hiburan & Langganan Digital",label:"Hiburan & Langganan Digital",icon:"ti-device-tv",isPeriodic:!1,isCustom:!1},{value:"Belanja & Lifestyle",label:"Belanja & Lifestyle",icon:"ti-shopping-bag",isPeriodic:!1,isCustom:!1},{value:"Sosial & Rekreasi",label:"Sosial & Rekreasi",icon:"ti-users",isPeriodic:!1,isCustom:!1},{value:"Pengeluaran lainnya",label:"Pengeluaran lainnya",icon:"ti-bolt",isPeriodic:!1,isCustom:!1}], _pemasukan:[{value:"Gaji",label:"Gaji",icon:"ti-cash",isCustom:!1},{value:"Uang Saku",label:"Uang Saku Orang Tua",icon:"ti-wallet",isCustom:!1},{value:"Freelance",label:"Freelance / Bisnis",icon:"ti-briefcase",isCustom:!1},{value:"Lainnya",label:"Lainnya",icon:"ti-coin",isCustom:!1}], get kebutuhan() { const custom = LocalStore.getCustomCategories().filter(c => c.nature === 'kebutuhan'); return [...this._kebutuhan, ...custom]; }, get keinginan() { const custom = LocalStore.getCustomCategories().filter(c => c.nature === 'keinginan'); return [...this._keinginan, ...custom]; }, get pemasukan() { const custom = LocalStore.getCustomCategories().filter(c => c.nature === 'pemasukan'); return [...this._pemasukan, ...custom]; }, getIcon(a,e) { let i=[]; i="pemasukan"===a?this.pemasukan:"kebutuhan"===a?this.kebutuhan:"keinginan"===a?this.keinginan:[...this.kebutuhan,...this.keinginan,...this.pemasukan]; const t=i.find((a=>a.value===e)); return t&&t.icon?t.icon:"ti-circle" }, isPeriodicCategory(a,e) { const i=this[a]; if(!i)return!1; const t=i.find((a=>a.value===e)); return!!t&&!0===t.isPeriodic }},ApiService={getSetupData:async()=>LocalStore.getSetup(),saveSetupData:async a=>(LocalStore.saveSetup(a),{success:!0}),getTransactions:async()=>LocalStore.getTransactions(),addTransaction:async a=>({success:!0,data:LocalStore.addTransaction(a)}),deleteTransaction:async a=>(LocalStore.deleteTransaction(a),{success:!0}),getSavings:async()=>LocalStore.getSavings(),addSavingTransaction:async a=>({success:!0,data:LocalStore.addSavingTransaction(a)}),deleteSavingTransaction:async a=>(LocalStore.deleteSavingTransaction(a),{success:!0}),getSavingTargets:async()=>LocalStore.getSavingTargets(),addSavingTarget:async a=>({success:!0,data:LocalStore.addSavingTarget(a)}),deleteSavingTarget:async a=>(LocalStore.deleteSavingTarget(a),{success:!0}),updateSavingTarget:async (id, data)=>({success:!0,data:LocalStore.updateSavingTarget(id, data)}),updateSavingTransaction:async (id, data)=>({success:!0,data:LocalStore.updateSavingTransaction(id, data)})};
 
-const STORAGE_KEY_SETUP = 'finStudent_setup_v2';
-const STORAGE_KEY_TRANSACTIONS = 'finStudent_transactions_v2';
-const STORAGE_KEY_SAVINGS = 'finStudent_savings_v3';
-const API_BASE = 'api';
 
-// ==========================================
-// Internal: localStorage handlers (Guest Mode)
-// ==========================================
-const LocalStore = {
-  getSetup() {
-    const data = localStorage.getItem(STORAGE_KEY_SETUP);
-    return data ? JSON.parse(data) : null;
+// Custom Alert Component
+window.CustomAlert = {
+  _init: function() {
+    if (document.getElementById('globalCustomAlert')) return;
+    const div = document.createElement('div');
+    div.innerHTML = `
+      <div class="modal fade" id="globalCustomAlert" tabindex="-1" aria-hidden="true" style="z-index: 1060;">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content rounded-4 border-0 shadow-lg text-center p-4">
+            <div class="mb-3">
+              <img src="./assets/images/mochi1.gif" alt="Mochi" style="height: 150px; object-fit: contain;">
+            </div>
+            <h5 class="modal-title mb-2 fw-bold text-dark" id="gcaTitle">Pemberitahuan</h5>
+            <p class="text-muted mb-4 fs-6" id="gcaMessage"></p>
+            <div class="d-flex justify-content-center gap-3 w-100">
+              <button type="button" class="btn btn-light rounded-pill px-4 fw-semibold flex-grow-1" id="gcaCancelBtn" data-bs-dismiss="modal">Batal</button>
+              <button type="button" class="btn btn-primary rounded-pill px-4 fw-bold flex-grow-1" id="gcaConfirmBtn">OK</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+    document.body.appendChild(div);
   },
-  saveSetup(data) {
-    localStorage.setItem(STORAGE_KEY_SETUP, JSON.stringify(data));
+  alert: function(message, title = 'Pemberitahuan') {
+    return new Promise((resolve) => {
+      this._init();
+      document.getElementById('gcaTitle').innerText = title;
+      document.getElementById('gcaMessage').innerText = message;
+      if (imgUrl) document.querySelector('#globalCustomAlert img').src = imgUrl;
+      else document.querySelector('#globalCustomAlert img').src = './assets/images/mochi1.gif';
+      document.getElementById('gcaCancelBtn').classList.add('d-none');
+      const confirmBtn = document.getElementById('gcaConfirmBtn');
+      confirmBtn.innerText = 'OK';
+      confirmBtn.className = 'btn btn-primary rounded-pill px-4 fw-bold flex-grow-1';
+      
+      const modalEl = document.getElementById('globalCustomAlert');
+      const bsModal = new bootstrap.Modal(modalEl);
+      
+      const onConfirm = () => {
+        confirmBtn.removeEventListener('click', onConfirm);
+        bsModal.hide();
+        resolve(true);
+      };
+      
+      confirmBtn.addEventListener('click', onConfirm);
+      
+      modalEl.addEventListener('hidden.bs.modal', function onHidden() {
+        modalEl.removeEventListener('hidden.bs.modal', onHidden);
+        resolve(true);
+      });
+      
+      bsModal.show();
+    });
   },
-  getTransactions() {
-    const data = localStorage.getItem(STORAGE_KEY_TRANSACTIONS);
-    return data ? JSON.parse(data) : [];
-  },
-  addTransaction(tx) {
-    const transactions = this.getTransactions();
-    const newTx = {
-      ...tx,
-      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
-      is_periodic: tx.is_periodic || false,
-      amortization_days: tx.amortization_days || 1,
-      nature: tx.nature || null,
-      createdAt: new Date().toISOString()
-    };
-    transactions.push(newTx);
-    transactions.sort((a, b) => new Date(b.date) - new Date(a.date));
-    localStorage.setItem(STORAGE_KEY_TRANSACTIONS, JSON.stringify(transactions));
-    return newTx;
-  },
-  deleteTransaction(id) {
-    let transactions = this.getTransactions();
-    transactions = transactions.filter(tx => tx.id !== id);
-    localStorage.setItem(STORAGE_KEY_TRANSACTIONS, JSON.stringify(transactions));
-  },
-  getSavings() {
-    const data = localStorage.getItem(STORAGE_KEY_SAVINGS);
-    return data ? JSON.parse(data) : [];
-  },
-  addSavingTransaction(saving) {
-    const savings = this.getSavings();
-    const newSaving = {
-      ...saving,
-      id: Date.now().toString() + Math.random().toString(36).substring(2, 9),
-      created_at: new Date().toISOString()
-    };
-    savings.push(newSaving);
-    savings.sort((a, b) => new Date(b.date) - new Date(a.date));
-    localStorage.setItem(STORAGE_KEY_SAVINGS, JSON.stringify(savings));
-    return newSaving;
-  },
-  deleteSavingTransaction(id) {
-    let savings = this.getSavings();
-    savings = savings.filter(s => s.id !== id);
-    localStorage.setItem(STORAGE_KEY_SAVINGS, JSON.stringify(savings));
-  },
-  getAllDataForSync() {
-    return {
-      setup: this.getSetup(),
-      transactions: this.getTransactions(),
-      savings: this.getSavings()
-    };
-  },
-  clearAll() {
-    localStorage.removeItem(STORAGE_KEY_SETUP);
-    localStorage.removeItem(STORAGE_KEY_TRANSACTIONS);
-    localStorage.removeItem(STORAGE_KEY_SAVINGS);
-  }
-};
-
-// ==========================================
-// CATEGORY CONFIG (shared between form & calculations)
-// ==========================================
-const FinCategories = {
-  kebutuhan: [
-    { value: 'Tempat Tinggal & Utilitas', label: 'Tempat Tinggal & Utilitas', icon: 'ti-home', isPeriodic: true },
-    { value: 'Konsumsi Dasar Pokok', label: 'Konsumsi Dasar Pokok', icon: 'ti-shopping-cart', isPeriodic: true },
-    { value: 'Transportasi Wajib', label: 'Transportasi Wajib', icon: 'ti-car', isPeriodic: false },
-    { value: 'Pendidikan & Kebutuhan Kampus', label: 'Pendidikan & Kebutuhan Kampus', icon: 'ti-book', isPeriodic: false },
-    { value: 'Kesehatan & Kebersihan Diri', label: 'Kesehatan & Kebersihan Diri', icon: 'ti-first-aid-kit', isPeriodic: true },
-    { value: 'Kewajiban & Tagihan Lainnya', label: 'Kewajiban & Tagihan Lainnya', icon: 'ti-file-invoice', isPeriodic: false }
-  ],
-  keinginan: [
-    { value: 'Food & Beverage (Jajan & Nongkrong)', label: 'Food & Beverage (Jajan & Nongkrong)', icon: 'ti-coffee', isPeriodic: false },
-    { value: 'Hiburan & Langganan Digital', label: 'Hiburan & Langganan Digital', icon: 'ti-device-tv', isPeriodic: false },
-    { value: 'Belanja & Lifestyle', label: 'Belanja & Lifestyle', icon: 'ti-shopping-bag', isPeriodic: false },
-    { value: 'Sosial & Rekreasi', label: 'Sosial & Rekreasi', icon: 'ti-users', isPeriodic: false },
-    { value: 'Pengeluaran Impulsif (Lain-lain)', label: 'Pengeluaran Impulsif (Lain-lain)', icon: 'ti-bolt', isPeriodic: false }
-  ],
-  pemasukan: [
-    { value: 'Gaji', label: 'Gaji', icon: 'ti-cash' },
-    { value: 'Uang Saku', label: 'Uang Saku Orang Tua', icon: 'ti-wallet' },
-    { value: 'Freelance', label: 'Freelance / Bisnis', icon: 'ti-briefcase' },
-    { value: 'Lainnya', label: 'Lainnya', icon: 'ti-coin' }
-  ],
-  getIcon(nature, categoryValue) {
-    let cats = [];
-    if (nature === 'pemasukan') cats = this.pemasukan;
-    else if (nature === 'kebutuhan') cats = this.kebutuhan;
-    else if (nature === 'keinginan') cats = this.keinginan;
-    else cats = [...this.kebutuhan, ...this.keinginan, ...this.pemasukan];
-    
-    const found = cats.find(c => c.value === categoryValue);
-    return found && found.icon ? found.icon : 'ti-circle';
-  },
-  isPeriodicCategory(nature, categoryValue) {
-    const cats = this[nature];
-    if (!cats) return false;
-    const found = cats.find(c => c.value === categoryValue);
-    return found ? found.isPeriodic === true : false;
-  }
-};
-
-// ==========================================
-// ApiService: The Smart Proxy (PUBLIC API)
-// ==========================================
-const ApiService = {
-  async getSetupData() {
-    return LocalStore.getSetup();
-  },
-
-  async saveSetupData(data) {
-    LocalStore.saveSetup(data);
-    return { success: true };
-  },
-
-  async getTransactions() {
-    return LocalStore.getTransactions();
-  },
-
-  async addTransaction(transaction) {
-    const newTx = LocalStore.addTransaction(transaction);
-    return { success: true, data: newTx };
-  },
-
-  async deleteTransaction(id) {
-    LocalStore.deleteTransaction(id);
-    return { success: true };
-  },
-
-  async getSavings() {
-    return LocalStore.getSavings();
-  },
-
-  async addSavingTransaction(saving) {
-    const newSaving = LocalStore.addSavingTransaction(saving);
-    return { success: true, data: newSaving };
-  },
-
-  async deleteSavingTransaction(id) {
-    LocalStore.deleteSavingTransaction(id);
-    return { success: true };
+  confirm: function(message, title = 'Konfirmasi', imgUrl = null) {
+    return new Promise((resolve) => {
+      this._init();
+      document.getElementById('gcaTitle').innerText = title;
+      document.getElementById('gcaMessage').innerText = message;
+      const cancelBtn = document.getElementById('gcaCancelBtn');
+      const confirmBtn = document.getElementById('gcaConfirmBtn');
+      
+      cancelBtn.classList.remove('d-none');
+      confirmBtn.innerText = 'Ya';
+      confirmBtn.className = 'btn btn-danger rounded-pill px-4 fw-bold flex-grow-1';
+      
+      const modalEl = document.getElementById('globalCustomAlert');
+      const bsModal = new bootstrap.Modal(modalEl);
+      
+      let resolved = false;
+      
+      const onConfirm = () => {
+        resolved = true;
+        confirmBtn.removeEventListener('click', onConfirm);
+        cancelBtn.removeEventListener('click', onCancel);
+        bsModal.hide();
+        resolve(true);
+      };
+      
+      const onCancel = () => {
+        resolved = true;
+        confirmBtn.removeEventListener('click', onConfirm);
+        cancelBtn.removeEventListener('click', onCancel);
+        bsModal.hide();
+        resolve(false);
+      };
+      
+      confirmBtn.addEventListener('click', onConfirm);
+      cancelBtn.addEventListener('click', onCancel);
+      
+      modalEl.addEventListener('hidden.bs.modal', function onHidden() {
+        modalEl.removeEventListener('hidden.bs.modal', onHidden);
+        if (!resolved) resolve(false);
+      });
+      
+      bsModal.show();
+    });
   }
 };
