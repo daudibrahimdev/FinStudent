@@ -1847,6 +1847,51 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   }
 
+  // Edit Mode Initialization
+  const urlParams = new URLSearchParams(window.location.search);
+  const editId = urlParams.get('edit_id');
+  if (editId && typeof LocalStore !== 'undefined') {
+    const tx = LocalStore.getTransactions().find(t => t.id === editId);
+    if (tx) {
+      document.getElementById('saveBtn').textContent = 'Update Transaksi';
+      document.querySelector('.card-header h4').textContent = 'Edit Transaksi';
+      
+      document.getElementById('type').value = tx.type;
+      document.getElementById('type').dispatchEvent(new Event('change'));
+      
+      if (tx.type === 'pengeluaran') {
+        document.getElementById('nature').value = tx.nature || 'kebutuhan';
+        document.getElementById('nature').dispatchEvent(new Event('change'));
+      }
+      
+      const amtDisplay = document.getElementById('amountDisplay');
+      if (amtDisplay) {
+         amtDisplay.value = tx.amount;
+         amtDisplay.dispatchEvent(new Event('input'));
+      }
+      
+      if (tx.date) {
+         document.getElementById('date').value = tx.date.split('T')[0];
+      }
+      
+      if (tx.merchant && document.getElementById('merchant')) {
+         document.getElementById('merchant').value = tx.merchant;
+      }
+      
+      if (tx.description && document.getElementById('description')) {
+         document.getElementById('description').value = tx.description;
+      }
+      
+      categoryHidden.value = tx.category;
+      categoryHidden.dispatchEvent(new Event('change'));
+      
+      if (tx.is_periodic && tx.amortization_days) {
+         document.getElementById('amortizationDays').value = tx.amortization_days;
+         document.getElementById('amortizationDays').dispatchEvent(new Event('input'));
+      }
+    }
+  }
+
 });
 </script>
 

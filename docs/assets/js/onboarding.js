@@ -479,8 +479,24 @@ window.showOnboardingModal = function () {
     } else {
       const fixedExpense = fixedItems.reduce((s, i) => s + i.amount, 0);
       OnboardingData.save({ frequency: selectedFreq, income: incomeVal, fixedExpense, fixedItems, skipped: false });
+      
+      if (typeof LocalStore !== 'undefined') {
+        let nextPaydayDate = new Date();
+        if (selectedFreq === 'weekly') {
+          nextPaydayDate.setDate(nextPaydayDate.getDate() + 7);
+        } else {
+          nextPaydayDate.setMonth(nextPaydayDate.getMonth() + 1);
+        }
+        LocalStore.saveSetup({
+          balance: incomeVal,
+          nextPayday: nextPaydayDate.toISOString().split('T')[0]
+        });
+      }
+
       bsModal.hide();
       if (typeof window.updateAlgorithmCards === 'function') window.updateAlgorithmCards();
+      
+      setTimeout(() => window.location.reload(), 300);
     }
   });
 
@@ -535,15 +551,6 @@ window.updateAlgorithmCards = async function () {
     setupData = await ApiService.getSetupData();
   } catch (e) { console.error('Algorithm cards fetch error', e); return; }
 
-  const expenditures = txs.filter(t => t.type === 'pengeluaran');
-  if (expenditures.length < 5) {
-    const missing = 5 - expenditures.length;
-    const msg = `Kurang ${missing} lagi, catat transaksimu untuk hasil yang akurat.`;
-    [leakEl, predEl, dailyEl, healthEl].forEach(el => { if (el) el.innerHTML = '—'; });
-    [leakDescEl, predDescEl, dailyDescEl, healthDescEl].forEach(el => { if (el) el.textContent = msg; });
-    return;
-  }
-
   const now = new Date();
   const year = now.getFullYear();
   const month = now.getMonth();
@@ -552,9 +559,14 @@ window.updateAlgorithmCards = async function () {
   const daysElapsed = dayOfMonth;
   const daysRemaining = totalDaysInMonth - dayOfMonth;
 
-  // Filter transactions to current month only
-  const monthStart = new Date(year, month, 1).getTime();
-  const monthTxs = txs.filter(t => new Date(t.date).getTime() >= monthStart);
+  // Filter transactions strictly to current month and year
+  const monthTxs = txs.filter(t => {
+    const d = new Date(t.date);
+    return d.getFullYear() === year && d.getMonth() === month;
+  });
+
+  const expenditures = monthTxs.filter(t => t.type === 'pengeluaran');
+  const isDataSparse = expenditures.length < 3; // flag for sparse data early in month
 
   let totalPemasukan = 0, totalPengeluaran = 0, totalTersier = 0;
   monthTxs.forEach(t => {
@@ -605,8 +617,14 @@ window.updateAlgorithmCards = async function () {
   // ── B. Prediksi Akhir Bulan ────────────────────────────────
   if (predEl && predDescEl) {
     if (daysElapsed > 0) {
-      const avgDaily = totalPengeluaran / daysElapsed;
-      const prediction = currentBalance - (avgDaily * daysRemaining) - obFixed;
+      // SMOOTHING ALGORITHM: blend historical average with expected daily budget to prevent early-month spikes
+      const expectedDaily = Math.max(0, (obIncome - obFixed) / totalDaysInMonth);
+      const effectiveDays = Math.max(daysElapsed, 3);
+      const actualAvg = totalPengeluaran / effectiveDays;
+      const weight = daysElapsed / totalDaysInMonth;
+      const blendedAvg = (actualAvg * weight) + (expectedDaily * (1 - weight));
+
+      const prediction = currentBalance - (blendedAvg * daysRemaining) - obFixed;
       const isPositive = prediction >= 0;
       predEl.innerHTML = `
         <span style="color: ${isPositive ? '#10b981' : '#ef4444'}; font-size: 1.1rem;">
@@ -616,7 +634,7 @@ window.updateAlgorithmCards = async function () {
           <i class="ti ${isPositive ? 'ti-trending-up' : 'ti-trending-down'}"></i>
           ${isPositive ? 'Surplus' : 'Potensi Defisit'}
         </small>`;
-      predDescEl.textContent = `Proyeksi saldo akhir bulan: ${fmt(prediction)}. Berdasarkan rata-rata pengeluaran ${fmt(avgDaily)}/hari.`;
+      predDescEl.innerHTML = `Proyeksi saldo akhir bulan: ${fmt(prediction)}.` + (isDataSparse ? ' <span class="text-warning" style="font-size:0.75rem;"><br/>(Akurasi rendah: data masih sedikit)</span>' : '');
     } else {
       predEl.innerHTML = '—';
       predDescEl.textContent = 'Belum cukup data hari ini untuk proyeksi.';
@@ -645,7 +663,16 @@ window.updateAlgorithmCards = async function () {
   // ── D. Health Status ────────────────────────────────────────
   if (healthEl && healthDescEl) {
     if (daysElapsed > 0 && obIncome > 0) {
-      const burnRate = (totalPengeluaran / obIncome) / (daysElapsed / totalDaysInMonth);
+      // SMOOTHING ALGORITHM: blend historical average with expected daily budget to prevent early-month spikes
+      const expectedDaily = Math.max(0, (obIncome - obFixed) / totalDaysInMonth);
+      const effectiveDays = Math.max(daysElapsed, 3);
+      const actualAvg = totalPengeluaran / effectiveDays;
+      const weight = daysElapsed / totalDaysInMonth;
+      const blendedAvg = (actualAvg * weight) + (expectedDaily * (1 - weight));
+      
+      const projectedMonthExpense = totalPengeluaran + (blendedAvg * daysRemaining) + obFixed;
+      const burnRate = projectedMonthExpense / obIncome;
+
       let statusText = 'Sehat';
       let statusColor = '#10b981';
       let statusIconClass = 'ti-heart-filled';
@@ -665,7 +692,7 @@ window.updateAlgorithmCards = async function () {
         <small class="d-block mt-1 fw-normal" style="font-size: 0.72rem; color: var(--ds-gray-500);">
           Burn rate: ${burnRate.toFixed(2)}x
         </small>`;
-      healthDescEl.textContent = `Rasio burn rate: ${burnRate.toFixed(2)}. ${burnRate <= 1.0 ? 'Pengeluaranmu sesuai jalur!' : burnRate <= 1.15 ? 'Sedikit di atas target, waspadai pengeluaran.' : 'Pengeluaran jauh melampaui pemasukan!'}`;
+      healthDescEl.innerHTML = `Rasio burn rate: ${burnRate.toFixed(2)}. ${burnRate <= 1.0 ? 'Pengeluaranmu sesuai jalur!' : burnRate <= 1.15 ? 'Sedikit di atas target, waspadai pengeluaran.' : 'Pengeluaran jauh melampaui pemasukan!'}` + (isDataSparse ? ' <span class="text-warning" style="font-size:0.75rem;"><br/>(Akurasi rendah: data masih sedikit)</span>' : '');
     } else {
       healthEl.innerHTML = '—';
       healthDescEl.textContent = 'Belum cukup data transaksi bulan ini.';

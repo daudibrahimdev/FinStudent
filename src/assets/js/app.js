@@ -218,7 +218,7 @@ date:document.getElementById("date").value,type:i,nature:l,amount:parseFloat(m.v
 }
 ;
 try{
-await ApiService.addTransaction(b),r.reset(),p.value="",m.value="",r.classList.remove("was-validated"),n.value="pengeluaran",a&&(a.className="custom-styled-select select-expense"),o.value="kebutuhan",d&&(d.className="custom-styled-select select-kebutuhan"),y(),document.getElementById("date")&&(document.getElementById("date").valueAsDate=new Date);
+const urlP=new URLSearchParams(window.location.search);const eId=urlP.get("edit_id");if(eId){await ApiService.updateTransaction(eId,b);await CustomAlert.alert("Transaksi berhasil diupdate!");window.location.href="transactions-history.html";return;}else{await ApiService.addTransaction(b);}r.reset(),p.value="",m.value="",r.classList.remove("was-validated"),n.value="pengeluaran",a&&(a.className="custom-styled-select select-expense"),o.value="kebutuhan",d&&(d.className="custom-styled-select select-kebutuhan"),y(),document.getElementById("date")&&(document.getElementById("date").valueAsDate=new Date);
 if (typeof GamificationEngine !== 'undefined') {
   const isSameDay = new Date(b.date).toDateString() === new Date().toDateString();
   if (isSameDay) GamificationEngine.showXpPopup(10, 'Disiplin mencatat hari ini!');
@@ -425,18 +425,31 @@ l
 ${
 e(n.amount)
 }
-</td>\n          <td><button class="btn btn-outline-danger btn-sm rounded-circle px-2 py-1 history-delete-btn" data-id="${
+</td>\n          <td><button class="btn btn-outline-primary btn-sm rounded-circle px-2 py-1 history-edit-btn me-1" data-id="${
+n.id
+}
+"><i class="ti ti-edit"></i></button><button class="btn btn-outline-danger btn-sm rounded-circle px-2 py-1 history-delete-btn" data-id="${
 n.id
 }
 "><i class="ti ti-trash"></i></button></td>\n        `,o.appendChild(a)
 }
-)),document.querySelectorAll(".history-delete-btn").forEach((e=>{
-e.addEventListener("click",(async e=>{
-(await CustomAlert.confirm("Hapus transaksi ini?"))&&(await ApiService.deleteTransaction(e.target.dataset.id),w())
-}
-))
-}
-)),n("historyMobileFeed",d,"transaction",(async e=>{
+));
+// Use event delegation on the table - so it works even after re-renders (pagination, filter)
+o.addEventListener("click",async function(ev){
+  const delBtn = ev.target.closest(".history-delete-btn");
+  const editBtn = ev.target.closest(".history-edit-btn");
+  if(delBtn){
+    const id = delBtn.dataset.id;
+    if(id && (await CustomAlert.confirm("Hapus transaksi ini?"))){
+      await ApiService.deleteTransaction(id);
+      w();
+    }
+  } else if(editBtn){
+    const id = editBtn.dataset.id;
+    if(id) window.location.href = `transactions.html?edit_id=${id}`;
+  }
+});
+n("historyMobileFeed",d,"transaction",(async e=>{
 (await CustomAlert.confirm("Hapus transaksi ini?"))&&(await ApiService.deleteTransaction(e),w())
 }
 )),E(s)
