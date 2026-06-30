@@ -17,7 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     // 2. Data Loading
-    const allTransactions = JSON.parse(localStorage.getItem('finStudent_transactions_v2')) || [];
+    const regularTxs = JSON.parse(localStorage.getItem('finStudent_transactions_v2')) || [];
+    const savingTxs = JSON.parse(localStorage.getItem('finStudent_savings_v3')) || [];
+    const allTransactions = [...regularTxs, ...savingTxs];
     // Only analyze expenses (pengeluaran)
     const expenses = allTransactions.filter(tx => tx.type === 'pengeluaran');
 
