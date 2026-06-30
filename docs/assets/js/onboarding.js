@@ -565,6 +565,22 @@ window.updateAlgorithmCards = async function () {
     return d.getFullYear() === year && d.getMonth() === month;
   });
 
+  // Calculate last month transactions for prediction
+  const lastMonth = month === 0 ? 11 : month - 1;
+  const lastMonthYear = month === 0 ? year - 1 : year;
+  const lastMonthTxs = txs.filter(t => {
+    const d = new Date(t.date);
+    return d.getFullYear() === lastMonthYear && d.getMonth() === lastMonth;
+  });
+  let totalPengeluaranLastMonth = 0;
+  lastMonthTxs.forEach(t => {
+    if (t.type === 'pengeluaran') {
+      totalPengeluaranLastMonth += parseFloat(t.amount) || 0;
+    }
+  });
+  const daysInLastMonth = new Date(lastMonthYear, lastMonth + 1, 0).getDate();
+  const avgExpenseLastMonth = totalPengeluaranLastMonth / daysInLastMonth;
+
   const expenditures = monthTxs.filter(t => t.type === 'pengeluaran');
   const isDataSparse = expenditures.length < 3; // flag for sparse data early in month
 
@@ -595,93 +611,105 @@ window.updateAlgorithmCards = async function () {
 
   // ── A. Daily Survival ──────────────────────────────────────
   if (dailyEl && dailyDescEl) {
-    if (frequency === 'harian') {
-      // Mode harian: batas pengeluaran = onboardingIncome (reset tiap hari)
-      if (dailyLabelEl) dailyLabelEl.textContent = 'Target Nabung Harian';
-      dailyEl.innerHTML = fmt(obIncome);
-      dailyDescEl.textContent = `Batas maks pengeluaran hari ini: ${fmt(obIncome)}. Sisakan sebagian agar tidak habis 100%.`;
-    } else {
-      if (dailyLabelEl) dailyLabelEl.textContent = 'Daily Survival';
-      let sisa = daysRemaining;
-      if (frequency === 'mingguan') {
-        // Sisa hari dalam minggu ini
-        const dayOfWeek = now.getDay(); // 0=Sun, 1=Mon...
-        sisa = Math.max(1, 7 - dayOfWeek);
-      }
-      const limit = Math.max(0, (currentBalance - obFixed)) / Math.max(1, sisa);
-      dailyEl.innerHTML = fmt(limit);
-      dailyDescEl.textContent = `Batas aman pengeluaran per hari agar kamu tidak minus. Masih ada ${sisa} hari tersisa.`;
-    }
+    if (dailyLabelEl) dailyLabelEl.textContent = 'Daily Survival';
+    const sisaHari = Math.max(1, daysRemaining);
+    const limit = Math.max(0, currentBalance) / sisaHari;
+    dailyEl.innerHTML = fmt(limit);
+    dailyDescEl.textContent = `Batas pengeluaran per hari dari sisa saldomu. Masih ada ${daysRemaining} hari tersisa bulan ini.`;
   }
 
   // ── B. Prediksi Akhir Bulan ────────────────────────────────
   if (predEl && predDescEl) {
-    if (daysElapsed > 0) {
-      // SMOOTHING ALGORITHM: blend historical average with expected daily budget to prevent early-month spikes
-      const expectedDaily = Math.max(0, (obIncome - obFixed) / totalDaysInMonth);
-      const effectiveDays = Math.max(daysElapsed, 3);
-      const actualAvg = totalPengeluaran / effectiveDays;
-      const weight = daysElapsed / totalDaysInMonth;
-      const blendedAvg = (actualAvg * weight) + (expectedDaily * (1 - weight));
-
-      const prediction = currentBalance - (blendedAvg * daysRemaining) - obFixed;
-      const isPositive = prediction >= 0;
-      predEl.innerHTML = `
-        <span style="color: ${isPositive ? '#10b981' : '#ef4444'}; font-size: 1.1rem;">
-          ${fmt(Math.abs(prediction))}
-        </span>
-        <small class="d-flex align-items-center justify-content-start gap-1 mt-1 fw-semibold" style="font-size: 0.75rem; color: ${isPositive ? '#10b981' : '#ef4444'};">
-          <i class="ti ${isPositive ? 'ti-trending-up' : 'ti-trending-down'}"></i>
-          ${isPositive ? 'Surplus' : 'Potensi Defisit'}
-        </small>`;
-      predDescEl.innerHTML = `Proyeksi saldo akhir bulan: ${fmt(prediction)}.` + (isDataSparse ? ' <span class="text-warning" style="font-size:0.75rem;"><br/>(Akurasi rendah: data masih sedikit)</span>' : '');
+    let prediction = 0;
+    if (lastMonthTxs.length > 0) {
+      prediction = currentBalance - (avgExpenseLastMonth * daysRemaining);
     } else {
-      predEl.innerHTML = '—';
-      predDescEl.textContent = 'Belum cukup data hari ini untuk proyeksi.';
+      prediction = currentBalance - ((totalPengeluaran / 30) * daysRemaining);
     }
+    
+    const isPositive = prediction >= 0;
+    predEl.innerHTML = `
+      <span style="color: ${isPositive ? '#10b981' : '#ef4444'}; font-size: 1.1rem;">
+        ${fmt(Math.abs(prediction))}
+      </span>
+      <small class="d-flex align-items-center justify-content-start gap-1 mt-1 fw-semibold" style="font-size: 0.75rem; color: ${isPositive ? '#10b981' : '#ef4444'};">
+        <i class="ti ${isPositive ? 'ti-trending-up' : 'ti-trending-down'}"></i>
+        ${isPositive ? 'Surplus' : 'Potensi Defisit'}
+      </small>`;
+    predDescEl.innerHTML = `Proyeksi saldo akhir bulan: ${fmt(prediction)}.`;
   }
 
   // ── C. Money Leak ──────────────────────────────────────────
   if (leakEl && leakDescEl) {
-    const threshold = 0.15 * obIncome;
-    const isLeaking = totalTersier > threshold;
-    leakEl.innerHTML = `
-      <span class="d-flex align-items-center gap-2" style="color: ${isLeaking ? '#ef4444' : '#10b981'}; font-size: 1.05rem;">
-        <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width:28px;height:28px;background:${isLeaking ? 'rgba(239,68,68,0.12)' : 'rgba(16,185,129,0.12)'}">
-          <i class="ti ${isLeaking ? 'ti-alert-triangle' : 'ti-shield-check'}" style="font-size:0.85rem;"></i>
+    const keinginanTxs = monthTxs.filter(t => t.type === 'pengeluaran' && t.nature === 'keinginan');
+    const categoryTotals = {};
+    let totalKeinginan = 0;
+    keinginanTxs.forEach(t => {
+      const amt = parseFloat(t.amount) || 0;
+      categoryTotals[t.category] = (categoryTotals[t.category] || 0) + amt;
+      totalKeinginan += amt;
+    });
+
+    let topCategory = null;
+    let topAmount = 0;
+    for (const cat in categoryTotals) {
+      if (categoryTotals[cat] > topAmount) {
+        topAmount = categoryTotals[cat];
+        topCategory = cat;
+      }
+    }
+
+    if (topCategory && totalKeinginan > 0) {
+      const percentage = Math.round((topAmount / totalKeinginan) * 100);
+      leakEl.innerHTML = `
+        <span class="d-flex align-items-center gap-2" style="color: #ef4444; font-size: 1.05rem;">
+          <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width:28px;height:28px;background:rgba(239,68,68,0.12)">
+            <i class="ti ti-alert-triangle" style="font-size:0.85rem;"></i>
+          </span>
+          <span class="fw-bold">${topCategory}</span>
         </span>
-        <span class="fw-bold">${isLeaking ? 'Terdeteksi!' : 'Aman'}</span>
-      </span>
-      <small class="d-block mt-1 fw-normal" style="font-size: 0.72rem; color: var(--ds-gray-500);">
-        ${fmt(totalTersier)} / batas ${fmt(threshold)}
-      </small>`;
-    leakDescEl.textContent = isLeaking
-      ? `Pengeluaran keinginan (${fmt(totalTersier)}) melebihi 15% pemasukan (${fmt(threshold)}). Coba kurangi jajan!`
-      : `Pengeluaran keinginan masih dalam batas aman 15% (${fmt(threshold)}).`;
+        <small class="d-block mt-1 fw-normal" style="font-size: 0.72rem; color: var(--ds-gray-500);">
+          Menyumbang ${percentage}% dari total keinginan
+        </small>`;
+      leakDescEl.textContent = `Pengeluaran keinginan terbesarmu bulan ini ada di kategori ${topCategory} (${fmt(topAmount)}).`;
+    } else {
+      leakEl.innerHTML = `
+        <span class="d-flex align-items-center gap-2" style="color: #10b981; font-size: 1.05rem;">
+          <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width:28px;height:28px;background:rgba(16,185,129,0.12)">
+            <i class="ti ti-shield-check" style="font-size:0.85rem;"></i>
+          </span>
+          <span class="fw-bold">Aman</span>
+        </span>
+        <small class="d-block mt-1 fw-normal" style="font-size: 0.72rem; color: var(--ds-gray-500);">
+          Belum ada kebocoran
+        </small>`;
+      leakDescEl.textContent = `Pengeluaran keinginan masih nol. Pertahankan!`;
+    }
   }
 
   // ── D. Health Status ────────────────────────────────────────
   if (healthEl && healthDescEl) {
-    if (daysElapsed > 0 && obIncome > 0) {
-      // SMOOTHING ALGORITHM: blend historical average with expected daily budget to prevent early-month spikes
-      const expectedDaily = Math.max(0, (obIncome - obFixed) / totalDaysInMonth);
-      const effectiveDays = Math.max(daysElapsed, 3);
-      const actualAvg = totalPengeluaran / effectiveDays;
-      const weight = daysElapsed / totalDaysInMonth;
-      const blendedAvg = (actualAvg * weight) + (expectedDaily * (1 - weight));
-      
-      const projectedMonthExpense = totalPengeluaran + (blendedAvg * daysRemaining) + obFixed;
-      const burnRate = projectedMonthExpense / obIncome;
+    if (totalPengeluaran > 0 || totalTersier > 0) {
+      const ratio = obIncome > 0 ? (totalTersier / obIncome) : 0;
+      const percentage = Math.round(ratio * 100);
 
-      let statusText = 'Sehat';
+      let statusText = 'Aman';
       let statusColor = '#10b981';
-      let statusIconClass = 'ti-heart-filled';
+      let statusIconClass = 'ti-shield-check';
       let statusBg = 'rgba(16,185,129,0.12)';
-      if (burnRate > 1.15) {
+      let desc = 'Pengeluaran keinginanmu masih terkendali di bawah 30%.';
+
+      if (ratio > 0.70) {
         statusText = 'Bahaya'; statusColor = '#ef4444'; statusIconClass = 'ti-flame'; statusBg = 'rgba(239,68,68,0.12)';
-      } else if (burnRate > 1.0) {
-        statusText = 'Waspada'; statusColor = '#f59e0b'; statusIconClass = 'ti-alert-circle'; statusBg = 'rgba(245,158,11,0.12)';
+        desc = 'Pengeluaran keinginanmu lebih dari 70%! Segera kurangi pengeluaran tersier.';
+      } else if (ratio > 0.50) {
+        statusText = 'Rawan'; statusColor = '#f59e0b'; statusIconClass = 'ti-alert-circle'; statusBg = 'rgba(245,158,11,0.12)';
+        desc = 'Pengeluaran keinginanmu lebih dari 50%. Mulai waspada dan kurangi jajan.';
+      } else if (ratio >= 0.30) {
+        statusText = 'Waspada'; statusColor = '#3b82f6'; statusIconClass = 'ti-info-circle'; statusBg = 'rgba(59,130,246,0.12)';
+        desc = 'Pengeluaran keinginanmu mencapai batas 30%. Hati-hati.';
       }
+
       healthEl.innerHTML = `
         <span class="d-flex align-items-center gap-2" style="color: ${statusColor}; font-size: 1.05rem;">
           <span class="d-inline-flex align-items-center justify-content-center rounded-circle flex-shrink-0" style="width:28px;height:28px;background:${statusBg}">
@@ -690,12 +718,12 @@ window.updateAlgorithmCards = async function () {
           <span class="fw-bold">${statusText}</span>
         </span>
         <small class="d-block mt-1 fw-normal" style="font-size: 0.72rem; color: var(--ds-gray-500);">
-          Burn rate: ${burnRate.toFixed(2)}x
+          Keinginan: ${percentage}% dari Pemasukan
         </small>`;
-      healthDescEl.innerHTML = `Rasio burn rate: ${burnRate.toFixed(2)}. ${burnRate <= 1.0 ? 'Pengeluaranmu sesuai jalur!' : burnRate <= 1.15 ? 'Sedikit di atas target, waspadai pengeluaran.' : 'Pengeluaran jauh melampaui pemasukan!'}` + (isDataSparse ? ' <span class="text-warning" style="font-size:0.75rem;"><br/>(Akurasi rendah: data masih sedikit)</span>' : '');
+      healthDescEl.innerHTML = desc;
     } else {
       healthEl.innerHTML = '—';
-      healthDescEl.textContent = 'Belum cukup data transaksi bulan ini.';
+      healthDescEl.textContent = 'Belum ada pengeluaran keinginan bulan ini.';
     }
   }
 };
