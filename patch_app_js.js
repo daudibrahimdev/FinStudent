@@ -1,37 +1,81 @@
 const fs = require('fs');
+const path = require('path');
 
-function patchApp(file) {
-  if (!fs.existsSync(file)) return;
-  let js = fs.readFileSync(file, 'utf8');
+const appendLogic = `
+// --- DYNAMIC CHART BINDINGS ---
+document.addEventListener('DOMContentLoaded', async () => {
+    if (document.getElementById('mainCashflowChart')) {
+        let allTxs = [];
+        let allSavs = [];
+        try {
+            if (typeof ApiService !== 'undefined') {
+                allTxs = await ApiService.getTransactions();
+                allSavs = await ApiService.getSavings();
+            }
+        } catch(e){ console.error('Error fetching data for dynamic chart', e); }
 
-  // Fix 1: g() function crashing on appendChild
-  const oldG = 'a="pemasukan"===e?FinCategories.pemasukan:FinCategories[t]||FinCategories.kebutuhan,s.innerHTML="",a.forEach((e=>{const t=document.createElement("option");t.value=e.value,t.textContent=e.label,e.isPeriodic&&(t.dataset.periodic="true"),s.appendChild(t)})),v()';
-  const newG = 'a="pemasukan"===e?FinCategories.pemasukan:FinCategories[t]||FinCategories.kebutuhan;if(s&&s.tagName==="SELECT"){s.innerHTML="";a.forEach((e=>{const t=document.createElement("option");t.value=e.value,t.textContent=e.label,e.isPeriodic&&(t.dataset.periodic="true"),s.appendChild(t)}))}v()';
-  
-  if (js.includes(oldG)) {
-    js = js.replace(oldG, newG);
-  }
+        // Initial render
+        if (typeof window.renderDynamicCashflowChart === 'function') {
+            window.renderDynamicCashflowChart(allTxs, allSavs);
+        }
 
-  // Fix 2: v() function crashing on s.options
-  const oldV = 'const e=s.options[s.selectedIndex];';
-  const newV = 'const e=(s&&s.tagName==="SELECT")?s.options[s.selectedIndex]:null;';
-  if (js.includes(oldV)) {
-    js = js.replace(oldV, newV);
-  }
-  
-  // Fix 3: In duplicate click handler (f), it does: s.value=i.category,v()
-  const oldF = 's.value=i.category,v(),';
-  const newF = 's.value=i.category,v(),s.dispatchEvent(new Event("change")),';
-  if (js.includes(oldF)) {
-    js = js.replace(oldF, newF);
-  }
+        // Bind metric buttons
+        const btnPem = document.getElementById('btn-pemasukan');
+        const btnPen = document.getElementById('btn-pengeluaran');
+        const btnTab = document.getElementById('btn-tabungan');
+        const btns = [btnPem, btnPen, btnTab];
+        
+        btns.forEach(btn => {
+            if(!btn) return;
+            btn.addEventListener('click', (e) => {
+                e.preventDefault();
+                btns.forEach(b => { if(b) b.classList.remove('active'); });
+                btn.classList.add('active');
+                if (typeof window.setCashflowMetric === 'function') {
+                   window.setCashflowMetric(btn.dataset.metric, allTxs, allSavs);
+                }
+            });
+        });
 
-  fs.writeFileSync(file, js);
+        // Bind Time Filter
+        const timeFilter = document.getElementById('chartTimeFilter');
+        const customGroup = document.getElementById('customDateRangeInputs');
+        const applyCustom = document.getElementById('applyCustomDateBtn');
+
+        if(timeFilter) {
+            timeFilter.addEventListener('change', (e) => {
+                if (e.target.value === 'custom') {
+                    customGroup.classList.remove('d-none');
+                    customGroup.classList.add('d-flex');
+                } else {
+                    customGroup.classList.add('d-none');
+                    customGroup.classList.remove('d-flex');
+                    if (typeof window.renderDynamicCashflowChart === 'function') {
+                        window.renderDynamicCashflowChart(allTxs, allSavs);
+                    }
+                }
+            });
+        }
+        
+        if (applyCustom) {
+            applyCustom.addEventListener('click', () => {
+                if (typeof window.renderDynamicCashflowChart === 'function') {
+                    window.renderDynamicCashflowChart(allTxs, allSavs);
+                }
+            });
+        }
+    }
+});
+`;
+
+function processFile(filePath) {
+    if (!fs.existsSync(filePath)) return;
+    let content = fs.readFileSync(filePath, 'utf8');
+    content += "\n" + appendLogic;
+    fs.writeFileSync(filePath, content);
+    console.log('Successfully appended logic to ' + filePath);
 }
 
-patchApp('docs/assets/js/app.js');
-if (fs.existsSync('src/assets/js/app.js')) {
-  patchApp('src/assets/js/app.js');
-}
-
-console.log('Fixed!');
+processFile(path.join(__dirname, 'docs', 'assets', 'js', 'app.js'));
+processFile(path.join(__dirname, 'src', 'assets', 'js', 'app.js'));
+processFile(path.join(__dirname, 'app-beautified.js'));

@@ -163,6 +163,17 @@
       </a>
     </li>
 
+    
+    <!-- Nav item Leaderboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="./leaderboard.html">
+        <span class="nav-icon">
+          <i class="ti ti-trophy fs-4 text-warning"></i>
+        </span> 
+        <span class="text">Leaderboard & XP</span>
+      </a>
+    </li>
+
     <!-- Nav item Setup -->
     <li class="nav-item">
       <a class="nav-link" href="./setup.html">
@@ -232,7 +243,18 @@
         </a>
       </li>
   
-      <!-- Nav item Setup -->
+      
+    <!-- Nav item Leaderboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="./leaderboard.html">
+        <span class="nav-icon">
+          <i class="ti ti-trophy fs-4 text-warning"></i>
+        </span> 
+        <span class="text">Leaderboard & XP</span>
+      </a>
+    </li>
+
+    <!-- Nav item Setup -->
       <li class="nav-item">
         <a class="nav-link" href="./setup.html">
           <span class="nav-icon">
@@ -1035,6 +1057,15 @@
               <p class="text-muted mb-0">Lihat dan filter seluruh riwayat finansialmu.</p>
             </div>
             <div class="d-flex align-items-center gap-2">
+              <div class="dropdown">
+                <button class="btn btn-outline-secondary bg-white dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="ti ti-download me-1"></i> Export
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm border-0">
+                  <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" id="exportPdfBtn"><i class="ti ti-file-type-pdf text-danger"></i> Export PDF</a></li>
+                  <li><a class="dropdown-item d-flex align-items-center gap-2" href="#" id="exportExcelBtn"><i class="ti ti-file-spreadsheet text-success"></i> Export Excel</a></li>
+                </ul>
+              </div>
               <button class="btn btn-outline-secondary bg-white" data-bs-toggle="modal" data-bs-target="#filterModal">
                 <i class="ti ti-filter me-1"></i> Filter
               </button>
@@ -1155,8 +1186,14 @@
 
 <p class="text-center mt-4 mb-4">© All rights reserved by <a href="https://codescandy.com" target="_blank">CodesCandy</a>. Distributed by <a href="https://themewagon.com" target="_blank">ThemeWagon</a>.</p>
 
-    <script src="./assets/js/storage.js"></script>
-    <script src="./assets/js/app.js"></script>
+    <!-- Export Libraries -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+  <script src="./assets/js/storage.js"></script>
+  <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/export.js"></script>
 </body>
 
 </html>

@@ -105,6 +105,17 @@
       </a>
     </li>
 
+    
+    <!-- Nav item Leaderboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="./leaderboard.html">
+        <span class="nav-icon">
+          <i class="ti ti-trophy fs-4 text-warning"></i>
+        </span> 
+        <span class="text">Leaderboard & XP</span>
+      </a>
+    </li>
+
     <!-- Nav item Setup -->
     <li class="nav-item">
       <a class="nav-link" href="./setup.html">
@@ -174,7 +185,18 @@
         </a>
       </li>
   
-      <!-- Nav item Setup -->
+      
+    <!-- Nav item Leaderboard -->
+    <li class="nav-item">
+      <a class="nav-link" href="./leaderboard.html">
+        <span class="nav-icon">
+          <i class="ti ti-trophy fs-4 text-warning"></i>
+        </span> 
+        <span class="text">Leaderboard & XP</span>
+      </a>
+    </li>
+
+    <!-- Nav item Setup -->
       <li class="nav-item">
         <a class="nav-link" href="./setup.html">
           <span class="nav-icon">
@@ -1150,7 +1172,7 @@
                   <div class="icon-shape icon-lg rounded-circle bg-info-darker text-info-lighter">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path stroke="none" d="M0 0h24v24H0z" fill="none" /><path d="M12 12m-9 0a9 9 0 1 0 18 0a9 9 0 1 0 -18 0" /><path d="M12 10m-3 0a3 3 0 1 0 6 0a3 3 0 1 0 -6 0" /><path d="M6.168 18.849a4 4 0 0 1 3.832 -2.849h4a4 4 0 0 1 3.834 2.855" /></svg>
                   </div>
-                  <div class="fw-semibold">Daily Survival</div>
+                  <div class="fw-semibold" id="dailySurvivalLabel">Daily Survival</div>
                 </div>
                 <div class="fin-value">
                   <div class="fs-3 fw-bold" id="dailyLimit">—</div>
@@ -1264,79 +1286,93 @@
             <div class="card card-lg">
               <!--  card body -->
               <div class="card-body d-flex flex-column gap-5">
-                <div class="mb-4">
-                  <!-- heading -->
-                  <h5 class="mb-0">Arus Keuangan</h5>
-                </div>
-                <div class="bg-gray-100 p-3 rounded-3">
-                  <ul class="nav nav-pills-white nav-fill" id="chartTabs" role="tablist">
-                    <li class="nav-item" role="presentation">
-                      <button class="nav-link active" id="current-week-tab" data-bs-toggle="pill"
-                        data-bs-target="#current-week" type="button" role="tab" aria-controls="current-week"
-                        aria-selected="true">
-                        <span class="d-flex flex-column">
-                          <span class="d-flex align-items-center gap-2">
-                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-primary">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path
-                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
-                              </svg></span><span>Total Pemasukan</span>
-                          </span>
-                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryIncome">Rp 0</span>
-                        </span>
-                      </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="past-week-tab" data-bs-toggle="pill" data-bs-target="#past-week"
-                        type="button" role="tab" aria-controls="past-week" aria-selected="false">
-                        <span class="d-flex flex-column">
-                          <span class="d-flex align-items-center gap-2">
-                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-warning">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path
-                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
-                              </svg></span><span>Total Pengeluaran</span>
-                          </span>
-                          <span class="text-start fs-3 fw-semibold mt-2" id="summaryExpense">Rp 0</span>
-                        </span>
-                      </button>
-                    </li>
-                    <li class="nav-item" role="presentation">
-                      <button class="nav-link" id="savings-tab" data-bs-toggle="pill" data-bs-target="#savings"
-                        type="button" role="tab" aria-controls="savings" aria-selected="false">
-                        <span class="d-flex flex-column">
-                          <span class="d-flex align-items-center gap-2">
-                            <span><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24"
-                                fill="currentColor"
-                                class="icon icon-tabler icons-tabler-filled icon-tabler-circle text-success">
-                                <path stroke="none" d="M0 0h24v24H0z" fill="none" />
-                                <path
-                                  d="M7 3.34a10 10 0 1 1 -4.995 8.984l-.005 -.324l.005 -.324a10 10 0 0 1 4.995 -8.336z" />
-                              </svg></span><span>Tabungan Masuk</span>
-                          </span>
-                          <span class="text-start fs-3 fw-semibold mt-2" id="summarySavings">Rp 0</span>
-                        </span>
-                      </button>
-                    </li>
-                  </ul>
+                
+                
+                <div class="mb-4 d-flex justify-content-between align-items-center flex-wrap gap-3">
+                  <!-- Metric Dropdown -->
+                  <div class="dropdown">
+                    <button class="btn btn-white border shadow-sm dropdown-toggle d-flex align-items-center gap-3 px-4 py-2 text-start" type="button" id="metricDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" style="border-radius: 14px; min-width: 220px;">
+                      <div class="bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 42px; height: 42px;" id="activeMetricIcon">
+                        <i class="ti ti-arrow-up-right fs-4"></i>
+                      </div>
+                      <div class="flex-grow-1">
+                        <div class="text-muted small fw-bold text-uppercase" id="activeMetricLabel" style="letter-spacing: 0.5px; font-size: 0.7rem;">PENGELUARAN</div>
+                        <div class="fs-4 fw-bolder text-dark mt-1" id="activeMetricAmount" style="line-height: 1.2;">Rp 0</div>
+                      </div>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-start shadow-lg border-0 mt-2 p-2" aria-labelledby="metricDropdownBtn" style="border-radius: 14px; min-width: 250px; z-index: 1050;">
+                      <li>
+                        <a class="dropdown-item d-flex align-items-center gap-3 rounded-3 px-3 py-2 mb-1 metric-select-btn transition-all" href="#" data-metric="pemasukan">
+                          <div class="bg-success-subtle text-success rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="ti ti-arrow-down-left fs-5"></i>
+                          </div>
+                          <div>
+                            <div class="fw-bold text-dark fs-6">Pemasukan</div>
+                            <div class="text-muted small fw-medium mt-1" id="drpIncome">Rp 0</div>
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item d-flex align-items-center gap-3 rounded-3 px-3 py-2 mb-1 metric-select-btn active bg-light transition-all" href="#" data-metric="pengeluaran">
+                          <div class="bg-warning-subtle text-warning rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="ti ti-arrow-up-right fs-5"></i>
+                          </div>
+                          <div>
+                            <div class="fw-bold text-dark fs-6">Pengeluaran</div>
+                            <div class="text-muted small fw-medium mt-1" id="drpExpense">Rp 0</div>
+                          </div>
+                        </a>
+                      </li>
+                      <li>
+                        <a class="dropdown-item d-flex align-items-center gap-3 rounded-3 px-3 py-2 metric-select-btn transition-all" href="#" data-metric="tabungan">
+                          <div class="bg-info-subtle text-info rounded-circle d-flex align-items-center justify-content-center flex-shrink-0" style="width: 36px; height: 36px;">
+                            <i class="ti ti-pig-money fs-5"></i>
+                          </div>
+                          <div>
+                            <div class="fw-bold text-dark fs-6">Tabungan Masuk</div>
+                            <div class="text-muted small fw-medium mt-1" id="drpSavings">Rp 0</div>
+                          </div>
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <!-- Time Filter Dropdown -->
+                  <div class="dropdown">
+                    <button class="btn btn-light d-flex align-items-center gap-2 px-3 py-2 border-0 shadow-sm" type="button" id="timeFilterDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside" style="border-radius: 10px; background: var(--ds-gray-100);">
+                      <i class="ti ti-calendar text-primary fs-4"></i>
+                      <span class="fw-semibold text-secondary" id="activeTimeLabel">Bulan Ini</span>
+                      <i class="ti ti-chevron-down ms-1 text-muted"></i>
+                    </button>
+                    <div class="dropdown-menu dropdown-menu-end shadow-lg border-0 mt-2 p-3" aria-labelledby="timeFilterDropdownBtn" style="border-radius: 14px; min-width: 290px; z-index: 1050;">
+                      <h6 class="dropdown-header px-1 text-uppercase text-muted fw-bold mb-2" style="letter-spacing: 0.5px; font-size: 0.75rem;">Rentang Cepat</h6>
+                      <div class="d-flex flex-wrap gap-2 mb-3">
+                        <button class="btn btn-sm btn-outline-primary time-preset-btn active flex-grow-1 fw-medium" data-range="this_month" style="border-radius: 8px;">Bulan Ini</button>
+                        <button class="btn btn-sm btn-outline-secondary time-preset-btn flex-grow-1 fw-medium" data-range="last_month" style="border-radius: 8px;">Bulan Lalu</button>
+                        <button class="btn btn-sm btn-outline-secondary time-preset-btn w-100 fw-medium" data-range="this_year" style="border-radius: 8px;">Sepanjang Tahun Ini</button>
+                      </div>
+                      
+                      <h6 class="dropdown-header px-1 text-uppercase text-muted fw-bold mb-2 border-top pt-3" style="letter-spacing: 0.5px; font-size: 0.75rem;">Kustom Tanggal</h6>
+                      <div class="d-flex flex-column gap-2 mb-3">
+                        <div class="d-flex align-items-center bg-gray-100 rounded-3 px-2 py-1 border border-gray-200">
+                           <span class="text-muted small fw-medium ms-1 me-2" style="min-width: 40px;">Dari</span>
+                           <input type="date" id="chartStartDate" class="form-control form-control-sm border-0 bg-transparent shadow-none px-1 text-dark fw-medium">
+                        </div>
+                        <div class="d-flex align-items-center bg-gray-100 rounded-3 px-2 py-1 border border-gray-200">
+                           <span class="text-muted small fw-medium ms-1 me-2" style="min-width: 40px;">Hingga</span>
+                           <input type="date" id="chartEndDate" class="form-control form-control-sm border-0 bg-transparent shadow-none px-1 text-dark fw-medium">
+                        </div>
+                      </div>
+                      <button id="applyCustomDateBtn" class="btn btn-primary w-100 py-2 fw-bold" style="border-radius: 10px;">Terapkan Kustom</button>
+                    </div>
+                  </div>
                 </div>
 
-                <div class="tab-content" id="chartTabsContent">
-                  <div class="tab-pane fade show active" id="current-week" role="tabpanel"
-                    aria-labelledby="current-week-tab">
-                    <div id="totalIncomeChart"></div>
-                  </div>
-                  <div class="tab-pane fade" id="past-week" role="tabpanel" aria-labelledby="past-week-tab">
-                    <div id="totalExpensesChart"></div>
-                  </div>
-                  <div class="tab-pane fade" id="savings" role="tabpanel" aria-labelledby="savings-tab">
-                    <div id="totalSavingsChart"></div>
-                  </div>
-                </div>
+                <div class="mt-4 pt-2"></div>
+                <div id="mainCashflowChart" style="min-height: 350px;"></div>
+
+
+
               </div>
             </div>
           </div>
@@ -1415,6 +1451,8 @@
   <script src="./assets/js/vendors/swiper.js"></script>
   <script src="./assets/js/storage.js"></script>
   <script src="./assets/js/app.js"></script>
+  <script src="./assets/js/onboarding.js"></script>
+  <script src="./assets/js/gamification.js"></script>
 </body>
 
 </html>

@@ -1,4 +1,7 @@
-// FinStudent Chart.js v2.1 — Dynamic Cashflow (Datetime X-Axis & Modern UI)
+const fs = require('fs');
+const path = require('path');
+
+const chartJsContent = `// FinStudent Chart.js v2.1 — Dynamic Cashflow (Datetime X-Axis & Modern UI)
 
 var theme = {
   primary: 'var(--ds-primary)',
@@ -248,3 +251,9 @@ window.theme = theme;
   };
 
 })();
+`;
+
+fs.writeFileSync(path.join(__dirname, 'src', 'assets', 'js', 'vendors', 'chart.js'), chartJsContent);
+fs.writeFileSync(path.join(__dirname, 'docs', 'assets', 'js', 'vendors', 'chart.js'), chartJsContent);
+console.log('chart.js v2 replaced successfully.');
+
