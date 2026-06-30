@@ -829,19 +829,7 @@ const i=e===w&&t===a,r=document.createElement("div");
 r.className="p-2 rounded-3 mp-month-item "+(i?"active":""),r.innerText=n,r.addEventListener("click",(e=>{
 e.stopPropagation();
 const t=String(a+1).padStart(2,"0");
-E=`${
-w
-}
--${
-t
-}
-`,I.innerText=`${
-n
-}
- ${
-w
-}
-`,x(E),F();
+E=`${w}-${t}`,I.innerText=`${n} ${w}`,x(E),F();
 const s=document.getElementById("monthPickerDropdownBtn");
 if(s&&"undefined"!=typeof bootstrap){
 (bootstrap.Dropdown.getInstance(s)||new bootstrap.Dropdown(s)).hide()
@@ -855,19 +843,7 @@ if(s&&"undefined"!=typeof bootstrap){
 ;
 if(I&&T){
 const e=new Date;
-E=`${
-e.getFullYear()
-}
--${
-String(e.getMonth()+1).padStart(2,"0")
-}
-`,w=e.getFullYear(),I.innerText=`${
-M[e.getMonth()]
-}
- ${
-e.getFullYear()
-}
-`,L&&L.addEventListener("click",(e=>{
+E=`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,"0")}`,w=e.getFullYear(),I.innerText=`${M[e.getMonth()]} ${e.getFullYear()}`,L&&L.addEventListener("click",(e=>{
 e.stopPropagation(),w--,F()
 }
 )),$&&$.addEventListener("click",(e=>{
@@ -882,19 +858,7 @@ if(n&&"undefined"!=typeof bootstrap){
 
 }
 )),D&&D.addEventListener("click",(t=>{
-t.stopPropagation(),E=`${
-e.getFullYear()
-}
--${
-String(e.getMonth()+1).padStart(2,"0")
-}
-`,w=e.getFullYear(),I.innerText=`${
-M[e.getMonth()]
-}
- ${
-e.getFullYear()
-}
-`,F(),x(E);
+t.stopPropagation(),E=`${e.getFullYear()}-${String(e.getMonth()+1).padStart(2,"0")}`,w=e.getFullYear(),I.innerText=`${M[e.getMonth()]} ${e.getFullYear()}`,F(),x(E);
 const n=document.getElementById("monthPickerDropdownBtn");
 if(n&&"undefined"!=typeof bootstrap){
 (bootstrap.Dropdown.getInstance(n)||new bootstrap.Dropdown(n)).hide()
