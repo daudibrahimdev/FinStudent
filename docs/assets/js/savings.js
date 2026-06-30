@@ -179,11 +179,22 @@ document.addEventListener('DOMContentLoaded', async () => {
       selected.setHours(0,0,0,0);
       if (isNaN(selected.getTime()) || selected < today) return await CustomAlert.alert('Tanggal tidak valid atau sudah lewat!');
       
-      await ApiService.addSavingTarget({
+      const addedTarget = await ApiService.addSavingTarget({
         name: inputName.value.trim(),
         targetAmount: parseCurrency(inputAmount.value),
         targetDate: inputDate.value
       });
+      
+      if (addedTarget && addedTarget.data && addedTarget.data.id) {
+        await ApiService.addSavingTransaction({
+          targetId: addedTarget.data.id,
+          amount: parseCurrency(inputAmount.value),
+          type: 'simpan',
+          date: new Date().toISOString().split('T')[0],
+          description: 'Alokasi awal ' + inputName.value.trim()
+        });
+      }
+      
       await renderTargets();
     } else if (currentStep === 4) {
       bsWizardModal.hide();
