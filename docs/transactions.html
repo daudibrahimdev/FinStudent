@@ -1248,13 +1248,13 @@
 
                     <!-- Tempat Beli / Merchant -->
                     <div class="mb-4" id="merchantGroup">
-                      <label for="merchant" class="form-label text-muted fw-semibold">Kamu belinya dimana? (Opsional)</label>
+                      <label for="merchant" id="merchantLabel" class="form-label text-muted fw-semibold">Kamu belinya dimana? (Opsional)</label>
                       <input type="text" class="form-control form-control-lg rounded-3 bg-light border-0" id="merchant" placeholder="Contoh : Indomaret" autocomplete="off" />
                     </div>
 
                     <!-- Deskripsi -->
                     <div class="mb-5">
-                      <label for="description" class="form-label text-muted">Catatan (Opsional)</label>
+                      <label for="description" id="descriptionLabel" class="form-label text-muted">Catatan (Opsional)</label>
                       <textarea class="form-control form-control-lg rounded-3 bg-light border-0" id="description" rows="2" placeholder="Contoh: Beli sabun cuci muka"></textarea>
                     </div>
 
@@ -1852,5 +1852,52 @@ document.addEventListener('DOMContentLoaded', function() {
 
   <script src="./assets/js/receipt_ocr.js"></script>
   <script src="./assets/js/gamification.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const typeRadios = document.getElementsByName('typeRadio');
+      const typeHidden = document.getElementById('type');
+      const merchantLabel = document.getElementById('merchantLabel');
+      const descriptionLabel = document.getElementById('descriptionLabel');
+      const merchantInput = document.getElementById('merchant');
+      const descriptionInput = document.getElementById('description');
+
+      if (merchantLabel && descriptionLabel) {
+        const updateLabels = (val) => {
+          if (val === 'pemasukan') {
+            merchantLabel.textContent = 'Pemasukannya dari mana? (Opsional)';
+            descriptionLabel.textContent = 'Kamu dapet pemasukan apa? (Opsional)';
+            if (merchantInput) merchantInput.placeholder = 'Contoh : Dari Orang Tua';
+            if (descriptionInput) descriptionInput.placeholder = 'Contoh : Bonus THR';
+          } else {
+            merchantLabel.textContent = 'Kamu belinya dimana? (Opsional)';
+            descriptionLabel.textContent = 'Catatan (Opsional)';
+            if (merchantInput) merchantInput.placeholder = 'Contoh : Indomaret';
+            if (descriptionInput) descriptionInput.placeholder = 'Contoh: Beli sabun cuci muka';
+          }
+        };
+        
+        typeRadios.forEach(radio => {
+          radio.addEventListener('change', (e) => {
+            if (e.target.checked) updateLabels(e.target.value);
+          });
+        });
+        
+        // Initial check
+        if (typeHidden) {
+           updateLabels(typeHidden.value);
+           
+           // Observe programmatic changes (e.g. from OCR or edit modal)
+           const observer = new MutationObserver(() => {
+              updateLabels(typeHidden.value);
+           });
+           observer.observe(typeHidden, { attributes: true, attributeFilter: ['value'] });
+        } else {
+           const checked = document.querySelector('input[name="typeRadio"]:checked');
+           if (checked) updateLabels(checked.value);
+        }
+      }
+    });
+  </script>
 </body>
 </html>
